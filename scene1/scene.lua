@@ -1,20 +1,94 @@
-local squareSize = 20
-local canvasWidth = 1920
-local canvasHeight = 1080
+local rectangle = require("objects.rectangle")
+local timeline = require("timeline")
 
-return {
-	width = 1920,
-	height = 1080,
-	fps = 60,
-	background = {1,1,1,1},
+local scene = {}
+scene.__index = scene
 
-	draw = function(self,time)
-		love.graphics.setColor(1,0,0,1)
-		love.graphics.rectangle("fill", 0,0, squareSize,squareSize)
-		love.graphics.rectangle("fill", canvasWidth - squareSize,0, squareSize,squareSize)
-		love.graphics.rectangle("fill", canvasWidth - squareSize,canvasHeight - squareSize, squareSize,squareSize)
-		love.graphics.rectangle("fill", 0,canvasHeight - squareSize, squareSize,squareSize)
-
-		love.graphics.print(time, 400, 100)
+function scene:draw(time)
+	for k,v in ipairs(self.objs) do
+		love.graphics.push()
+		v:draw(time)
+		love.graphics.pop()
 	end
-}
+end
+
+function scene:wait()
+	self.context:wait()
+end
+
+function scene:sleep(d)
+	self.context:sleep(d)
+end
+
+function scene:waitAndSleep(d)
+	self.context:wait()
+	self.context:sleep(d)
+end
+
+function scene:duration()
+	return self.context.lastClipEnd
+end
+
+function scene:add(o)
+	table.insert(self.objs, o)
+end
+
+function scene:rectangle(o)
+	if type(o.x) == "number" then
+		o.x = timeline(o.x)
+		o.x.context = self.context
+	end
+
+	if type(o.y) == "number" then
+		o.y = timeline(o.y)
+		o.y.context = self.context
+	end
+
+	if type(o.width) == "number" then
+		o.width = timeline(o.width)
+		o.width.context = self.context
+	end
+
+	if type(o.height) == "number" then
+		o.height = timeline(o.height)
+		o.height.context = self.context
+	end
+
+	local r = rectangle(o)
+	self:add(r)
+	return r
+end
+
+local function newContext()
+	return {
+		currentTime = 0,
+		lastClipEnd = 0,
+
+		add = function(self, f)
+			self.lastClipEnd = math.max(self.lastClipEnd, f.start + f.duration)
+		end,
+
+		wait = function(self)
+			self.currentTime = self.lastClipEnd
+		end,
+
+		sleep = function(self, duration)
+			self.currentTime = self.currentTime + duration
+		end,
+	}
+end
+
+return function(opts)
+	local o = {
+		width = opts.width or 1920,
+		height = opts.height or 1080,
+		fps = opts.fps or 60,
+		background = opts.background or {1,1,1,1},
+
+		objs = {},
+		context = newContext(),
+	}
+	setmetatable(o, scene)
+
+	return o
+end
