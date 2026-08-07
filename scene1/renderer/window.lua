@@ -1,10 +1,5 @@
 return function()
 	return {
-		windowFlags = {
-			fullscreen = false,
-			resizable = true,
-		},
-
 		draw = function(self, canvas)
 			local windowWidth, windowHeight = love.window.getMode()
 			local sceneWidth = canvas:getWidth() 
@@ -18,10 +13,6 @@ return function()
 			love.graphics.draw(canvas, offsetX, offsetY, 0, scale, scale)
 
 			love.graphics.present()
-		end,
-
-		load = function(self, canvas)
-			love.window.setMode(canvas:getWidth(), canvas:getHeight(), self.windowFlags)
 		end,
 
 		keypressed = function(self,key,scancode,isrepeat)

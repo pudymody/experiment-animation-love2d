@@ -24,7 +24,6 @@ function love.run()
 	end
 
 	loader:update()
-	renderer:load(loader.canvas)
 
 	-- We don't want the first frame's dt to include time taken by love.load.
 	if love.timer then love.timer.step() end
@@ -44,9 +43,7 @@ function love.run()
 			end
 		end
 
-		if loader:update() then
-			renderer:load(loader.canvas)
-		end
+		loader:update()
 
 		-- Update dt, as we'll be passing it to update
 		if love.timer and playback.isPlaying then
