@@ -3,7 +3,7 @@ return function()
 		isPlaying = true,
 
 		position = 0,
-		positionSeekStep = 2,
+		positionSeekStep = 1000,
 		duration = 0,
 
 		setDuration = function(self, d)

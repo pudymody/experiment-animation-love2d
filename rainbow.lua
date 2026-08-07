@@ -18,8 +18,8 @@ local colors = {
 }
 
 local squareWidth = scene.width / #colors
-local duration = 0.875
-local interval = 0.125
+local duration = 875
+local interval = 125
 
 for i,c in ipairs(colors) do
 	local r = scene:rectangle {
@@ -44,7 +44,7 @@ for i,c in ipairs(colors) do
 	scene:sleep(interval)
 end
 
-scene:waitAndSleep(0.5)
+scene:waitAndSleep(500)
 
 for i,r in ipairs(scene.objs) do
 	r.height:to {
