@@ -34,6 +34,25 @@ return function()
 		seekBy = function(self, dur)
 			self.position = self.position + dur
 			self.position = math.max(self.position, 0)
+		end,
+
+		keypressed = function(self, key, scancode, isrepeat)
+			if key == "right" then
+				self:forward()
+			end
+
+			if key == "left" then
+				self:backward()
+			end
+
+			if key == "r" then
+				self:stop()
+			end
+
+			if key == "space" then
+				love.timer.step()
+				self:toggle()
+			end
 		end
 	}
 end

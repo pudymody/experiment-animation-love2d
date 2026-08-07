@@ -1,39 +1,16 @@
 local newPlayback = require("playback")
 local playback = newPlayback()
 
-local isFullscreen = false 
-
-local windowFlags = {
-	fullscreen = false,
-	resizable = true,
-}
+local newWindowRenderer = require("renderer.window")
+local renderer = newWindowRenderer()
 
 function love.keypressed(key, scancode, isrepeat)
 	if key == "escape" or key == "q" then
 		love.event.quit()
 	end
 
-	if key == "right" then
-		playback:forward()
-	end
-
-	if key == "left" then
-		playback:backward()
-	end
-
-	if key == "r" then
-		playback:stop()
-	end
-
-	if key == "space" then
-		love.timer.step()
-		playback:toggle()
-	end
-
-	if key == "f" then
-		fullscreen = not fullscreen
-		love.window.setFullscreen(fullscreen)
-	end
+	playback:keypressed(key,scancode,isrepeat)
+	renderer:keypressed(key,scancode,isrepeat)
 end
 
 function love.run()
@@ -47,7 +24,7 @@ function love.run()
 
 	local scene = love.filesystem.load(file)()
 	scene:setup()
-	love.window.setMode(scene.width, scene.height, windowFlags)
+	renderer:load(scene)
 
 	local sceneCanvas = love.graphics.newCanvas(scene.width, scene.height)
 
@@ -76,7 +53,7 @@ function love.run()
 			sceneCanvas.release()
 			scene = love.filesystem.load(file)()
 			scene:setup()
-			love.window.setMode(scene.width, scene.height, windowFlags)
+			renderer:load(scene)
 			sceneCanvas = love.graphics.newCanvas(scene.width, scene.height)
 		end
 
@@ -91,16 +68,7 @@ function love.run()
 			love.graphics.clear(scene.background)
 			scene:draw(playback.position)
 
-			local windowWidth, windowHeight = love.window.getMode()
-			local scale = math.min( windowWidth / scene.width, windowHeight / scene.height)
-			local offsetX = (windowWidth - (scene.width * scale)) / 2
-			local offsetY = (windowHeight - (scene.height * scale)) / 2
-
-			love.graphics.reset()
-			love.graphics.clear(0,0,0,1)
-			love.graphics.draw(sceneCanvas, offsetX, offsetY, 0, scale, scale)
-
-			love.graphics.present()
+			renderer:draw({ canvas = sceneCanvas, width = scene.width, height = scene.height })
 		end
 
 		if love.timer then love.timer.sleep(0.001) end
