@@ -56,8 +56,8 @@ function love.run()
 		if love.graphics and love.graphics.isActive() then
 			love.graphics.setCanvas(loader.canvas)
 			love.graphics.origin()
-			love.graphics.clear(scene.background)
-			scene:draw(playback.position)
+			love.graphics.clear(loader.scene.background)
+			loader.scene:draw(playback.position)
 
 			renderer:draw(loader.canvas)
 		end

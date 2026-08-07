@@ -1,4 +1,4 @@
-scene = {}
+local scene = {}
 
 function scene:setup()
 	self.width = 1920
