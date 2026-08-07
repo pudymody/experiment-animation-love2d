@@ -29,6 +29,12 @@ function scene:duration()
 	return self.context.lastClipEnd
 end
 
+function scene:timeline(v)
+	local o = timeline(v)
+	o.context = self.context
+	return o
+end
+
 function scene:add(o)
 	table.insert(self.objs, o)
 end
