@@ -1,6 +1,6 @@
-local positionSeekStep = 2
-local position = 0
-local isPlaying = true
+local newPlayback = require("playback")
+local playback = newPlayback()
+
 local isFullscreen = false 
 
 local windowFlags = {
@@ -14,21 +14,20 @@ function love.keypressed(key, scancode, isrepeat)
 	end
 
 	if key == "right" then
-		position = position + positionSeekStep
+		playback:forward()
 	end
 
 	if key == "left" then
-		position = position - positionSeekStep
-		position = math.max(position, 0)
+		playback:backward()
 	end
 
 	if key == "r" then
-		position = 0 
+		playback:stop()
 	end
 
 	if key == "space" then
 		love.timer.step()
-		isPlaying = not isPlaying
+		playback:toggle()
 	end
 
 	if key == "f" then
@@ -82,15 +81,15 @@ function love.run()
 		end
 
 		-- Update dt, as we'll be passing it to update
-		if love.timer and isPlaying then
-			position = position + love.timer.step()
+		if love.timer and playback.isPlaying then
+			playback:seekBy(love.timer.step())
 		end
 
 		if love.graphics and love.graphics.isActive() then
 			love.graphics.setCanvas(sceneCanvas)
 			love.graphics.origin()
 			love.graphics.clear(scene.background)
-			scene:draw(position)
+			scene:draw(playback.position)
 
 			local windowWidth, windowHeight = love.window.getMode()
 			local scale = math.min( windowWidth / scene.width, windowHeight / scene.height)
