@@ -4,6 +4,8 @@ local playback = newPlayback()
 local newWindowRenderer = require("renderer.window")
 local renderer = newWindowRenderer()
 
+local newLoader = require("loader")
+
 function love.keypressed(key, scancode, isrepeat)
 	if key == "escape" or key == "q" then
 		love.event.quit()
@@ -15,18 +17,14 @@ end
 
 function love.run()
 	local file = love.arg.parseGameArguments(arg)[1]
-	if file == nil then
-		print("You have to provide a valid scene file to run")
+	local loader, err = newLoader(file)
+	if err ~= nil then
+		print(err)
 		return
 	end
 
-	local fileLastModified = love.filesystem.getInfo(file).modtime
-
-	local scene = love.filesystem.load(file)()
-	scene:setup()
-	renderer:load(scene)
-
-	local sceneCanvas = love.graphics.newCanvas(scene.width, scene.height)
+	loader:update()
+	renderer:load(loader.scene)
 
 	-- We don't want the first frame's dt to include time taken by love.load.
 	if love.timer then love.timer.step() end
@@ -46,15 +44,8 @@ function love.run()
 			end
 		end
 
-		-- hotreload file based on https://github.com/kjarvi/monocle/blob/master/monocle.lua
-		local fileInfo = love.filesystem.getInfo(file)
-		if fileInfo ~= nil and fileLastModified ~= fileInfo.modtime then
-			fileLastModified = fileInfo.modtime
-			sceneCanvas.release()
-			scene = love.filesystem.load(file)()
-			scene:setup()
+		if loader:update() then
 			renderer:load(scene)
-			sceneCanvas = love.graphics.newCanvas(scene.width, scene.height)
 		end
 
 		-- Update dt, as we'll be passing it to update
@@ -63,12 +54,12 @@ function love.run()
 		end
 
 		if love.graphics and love.graphics.isActive() then
-			love.graphics.setCanvas(sceneCanvas)
+			love.graphics.setCanvas(loader.canvas)
 			love.graphics.origin()
 			love.graphics.clear(scene.background)
 			scene:draw(playback.position)
 
-			renderer:draw({ canvas = sceneCanvas, width = scene.width, height = scene.height })
+			renderer:draw(loader.canvas)
 		end
 
 		if love.timer then love.timer.sleep(0.001) end

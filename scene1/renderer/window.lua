@@ -5,17 +5,17 @@ return function()
 			resizable = true,
 		},
 
-		draw = function(self, scene)
+		draw = function(self, canvas)
 			local windowWidth, windowHeight = love.window.getMode()
-			local sceneWidth = scene.width 
-			local sceneHeight = scene.height
+			local sceneWidth = canvas:getWidth() 
+			local sceneHeight = canvas:getHeight()
 			local scale = math.min( windowWidth / sceneWidth, windowHeight / sceneHeight)
 			local offsetX = (windowWidth - (sceneWidth * scale)) / 2
 			local offsetY = (windowHeight - (sceneHeight * scale)) / 2
 
 			love.graphics.reset()
 			love.graphics.clear(0,0,0,1)
-			love.graphics.draw(scene.canvas, offsetX, offsetY, 0, scale, scale)
+			love.graphics.draw(canvas, offsetX, offsetY, 0, scale, scale)
 
 			love.graphics.present()
 		end,
