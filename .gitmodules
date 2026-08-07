@@ -1,3 +1,9 @@
 [submodule "scene1/nativefs"]
 	path = scene1/nativefs
 	url = https://github.com/EngineerSmith/nativefs
+[submodule "engine/-b"]
+	path = engine/-b
+	url = https://github.com/EngineerSmith/nativefs
+[submodule "engine/nativefs"]
+	path = engine/nativefs
+	url = https://github.com/EngineerSmith/nativefs
