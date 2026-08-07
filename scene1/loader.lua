@@ -19,7 +19,6 @@ return function(file)
 
 				self.fileLastModified = fileInfo.modtime
 				self.scene = love.filesystem.load(self.filePath)()
-				self.scene:setup()
 				self.canvas = love.graphics.newCanvas(self.scene.width, self.scene.height)
 				return true
 			end
