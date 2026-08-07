@@ -20,8 +20,8 @@ return function()
 			love.graphics.present()
 		end,
 
-		load = function(self, scene)
-			love.window.setMode(scene.width, scene.height, self.windowFlags)
+		load = function(self, canvas)
+			love.window.setMode(canvas:getWidth(), canvas:getHeight(), self.windowFlags)
 		end,
 
 		keypressed = function(self,key,scancode,isrepeat)
