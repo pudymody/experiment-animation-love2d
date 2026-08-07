@@ -4,6 +4,11 @@ return function()
 
 		position = 0,
 		positionSeekStep = 2,
+		duration = 0,
+
+		setDuration = function(self, d)
+			self.duration = d
+		end,
 
 		play = function(self)
 			self.isPlaying = true
@@ -18,7 +23,7 @@ return function()
 		end,
 
 		forward = function(self)
-			self.position = self.position + self.positionSeekStep
+			self.position = math.min(self.duration, self.position + self.positionSeekStep)
 		end,
 
 		backward = function(self)
@@ -34,6 +39,7 @@ return function()
 		seekBy = function(self, dur)
 			self.position = self.position + dur
 			self.position = math.max(self.position, 0)
+			self.position = math.min(self.position, self.duration)
 		end,
 
 		keypressed = function(self, key, scancode, isrepeat)

@@ -23,8 +23,6 @@ function love.run()
 		return
 	end
 
-	loader:update()
-
 	-- We don't want the first frame's dt to include time taken by love.load.
 	if love.timer then love.timer.step() end
 
@@ -43,7 +41,9 @@ function love.run()
 			end
 		end
 
-		loader:update()
+		if loader:update() then
+			playback:setDuration(loader.scene:duration())
+		end
 
 		-- Update dt, as we'll be passing it to update
 		if love.timer and playback.isPlaying then
