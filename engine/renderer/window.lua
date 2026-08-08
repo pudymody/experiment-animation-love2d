@@ -10,6 +10,11 @@ function parseTime(milliseconds)
 	return { milliseconds = milliseconds, seconds = seconds, minutes = minutes, hours = hours }
 end
 
+function toggleFullscreen()
+	_, _, flags = love.window.getMode()
+	love.window.setFullscreen(not flags.fullscreen)
+end
+
 local osc = {
 	background = {0.2,0.2,0.2,1},
 	padding = 5,
@@ -197,8 +202,7 @@ local osc = {
 		end
 
 		if x >= self.seekbar_offset + self.seekbar_width + self.padding * 2 then
-			_, _, flags = love.window.getMode()
-			love.window.setFullscreen(not flags.fullscreen)
+			toggleFullscreen()
 		end
 	end,
 
@@ -250,14 +254,9 @@ return function(playback)
 			love.graphics.present()
 		end,
 
-		toggleFullscreen = function(self)
-			_, _, flags = love.window.getMode()
-			love.window.setFullscreen(not flags.fullscreen)
-		end,
-
 		keypressed = function(self,key,scancode,isrepeat)
 			if key == "f" then
-				self:toggleFullscreen()
+				toggleFullscreen()
 			end
 		end,
 
