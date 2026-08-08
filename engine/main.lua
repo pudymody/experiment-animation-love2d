@@ -6,7 +6,7 @@ local newLoader = require("loader")
 local events = newEventBus()
 
 function love.keypressed(key, scancode, isrepeat)
-	events:dispatch("keypressed", {
+	events:dispatch("love.keypressed", {
 		key= key,
 		scancode = scancode,
 		isrepeat = isrepeat
@@ -14,7 +14,7 @@ function love.keypressed(key, scancode, isrepeat)
 end
 
 function love.mousepressed( x, y, button, istouch, presses )
-	events:dispatch("mousepressed", {
+	events:dispatch("love.mousepressed", {
 		x = x,
 		y = y,
 		button = button,
@@ -24,7 +24,7 @@ function love.mousepressed( x, y, button, istouch, presses )
 end
 
 function love.mousereleased( x, y, button, istouch, presses )
-	events:dispatch("mousereleased", {
+	events:dispatch("love.mousereleased", {
 		x = x,
 		y = y,
 		button = button,
@@ -34,7 +34,7 @@ function love.mousereleased( x, y, button, istouch, presses )
 end
 
 function love.mousemoved( x, y, dx,dy, istouch )
-	events:dispatch("mousemoved", {
+	events:dispatch("love.mousemoved", {
 		x = x,
 		y = y,
 		dx = dx,
@@ -44,7 +44,7 @@ function love.mousemoved( x, y, dx,dy, istouch )
 end
 
 function love.mousefocus( f )
-	events:dispatch("mousefocus", {
+	events:dispatch("love.mousefocus", {
 		f = f,
 	})
 end
@@ -60,19 +60,19 @@ function love.run()
 	local playback = newPlayback()
 
 	local renderer = newWindowRenderer(playback)
-	events:on("keypressed", function(e)
+	events:on("love.keypressed", function(e)
 		renderer:keypressed(e.key,e.scancode,e.isrepeat)
 	end)
-	events:on("mousepressed", function(e)
+	events:on("love.mousepressed", function(e)
 		renderer:mousepressed(e.x,e.y,e.button,e.istouch,e.presses)
 	end)
-	events:on("mousemoved", function(e)
+	events:on("love.mousemoved", function(e)
 		renderer:mousemoved(e.x,e.y,e.dx, e.dy,e.istouch)
 	end)
-	events:on("mousefocus", function(e)
+	events:on("love.mousefocus", function(e)
 		renderer:mousefocus(e.f)
 	end)
-	events:on("mousereleased", function(e)
+	events:on("love.mousereleased", function(e)
 		renderer:mousereleased(e.x,e.y,e.button,e.istouch,e.presses)
 	end)
 
