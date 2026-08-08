@@ -109,7 +109,7 @@ local osc = {
 	end,
 
 	seekbar = function(self)
-		self.seekbar_width = self.width - self.padding*2 - self.currentOffset
+		self.seekbar_width = self.width - self.padding*2 - self.currentOffset - self.height
 		self.seekbar_offset = self.currentOffset
 
 		love.graphics.setColor(self.seekbar_background)
@@ -128,6 +128,19 @@ local osc = {
 			self.currentOffset + self.padding,
 			self.y + self.padding,
 			currentSeekbarWidth,
+			self.height - self.padding * 2
+		)
+
+		self.currentOffset = self.currentOffset + self.seekbar_width + self.padding * 2
+	end,
+
+	fullscreen = function(self)
+		love.graphics.setColor(self.seekbar_foreground)
+		love.graphics.rectangle(
+			"line",
+			self.currentOffset + self.padding,
+			self.y + self.padding,
+			self.height - self.padding * 2,
 			self.height - self.padding * 2
 		)
 	end,
@@ -158,6 +171,9 @@ local osc = {
 		-- seekbar
 		self:seekbar()
 
+		-- fullscreen
+		self:fullscreen()
+
 	end,
 
 	seek = function(self,x)
@@ -178,6 +194,11 @@ local osc = {
 			self:seek(x)
 			self.playback_wasPlaying = self.playback.isPlaying
 			self.playback:pause()
+		end
+
+		if x >= self.seekbar_offset + self.seekbar_width + self.padding * 2 then
+			_, _, flags = love.window.getMode()
+			love.window.setFullscreen(not flags.fullscreen)
 		end
 	end,
 
@@ -205,13 +226,14 @@ return function(playback)
 	osc.playback = playback
 
 	return {
+		osc = osc,
 		playback = playback,
 		draw = function(self, canvas)
 			local windowWidth, windowHeight = love.window.getMode()
 
-			osc.y = windowHeight - osc.height
-			osc.width = windowWidth
-			windowHeight = windowHeight - osc.height
+			self.osc.y = windowHeight - self.osc.height
+			self.osc.width = windowWidth
+			windowHeight = windowHeight - self.osc.height
 
 			local sceneWidth = canvas:getWidth() 
 			local sceneHeight = canvas:getHeight()
@@ -223,7 +245,7 @@ return function(playback)
 			love.graphics.clear(0,0,0,1)
 			love.graphics.draw(canvas, offsetX, offsetY, 0, scale, scale)
 
-			osc:draw()
+			self.osc:draw()
 
 			love.graphics.present()
 		end,
@@ -240,24 +262,24 @@ return function(playback)
 		end,
 
 		mousepressed = function(self,x, y, button, istouch, presses )
-			if y < osc.y then
+			if y < self.osc.y then
 				self.playback:toggle()
 				return
 			end
 
-			osc:mousepressed(x,y,button,istouch,presses)
+			self.osc:mousepressed(x,y,button,istouch,presses)
 		end,
 
 		mousereleased = function(self,x, y, button, istouch, presses )
-			osc:mousereleased(x,y,button,istouch,presses)
+			self.osc:mousereleased(x,y,button,istouch,presses)
 		end,
 
 		mousemoved = function(self,x, y, dx, dy, istouch )
-			osc:mousemoved(x,y,dx,dy,istouch)
+			self.osc:mousemoved(x,y,dx,dy,istouch)
 		end,
 
 		mousefocus = function(self,f)
-			osc:mousefocus(f)
+			self.osc:mousefocus(f)
 		end,
 	}
 end
