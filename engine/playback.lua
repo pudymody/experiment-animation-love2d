@@ -11,6 +11,7 @@ return function()
 		end,
 
 		play = function(self)
+			love.timer.step()
 			self.isPlaying = true
 		end,
 
@@ -19,7 +20,15 @@ return function()
 		end,
 
 		toggle = function(self)
-			self.isPlaying = not self.isPlaying
+			if self.position >= self.duration then
+				return
+			end
+
+			if self.isPlaying then
+				self:pause()
+			else
+				self:play()
+			end
 		end,
 
 		forward = function(self)
@@ -56,7 +65,6 @@ return function()
 			end
 
 			if key == "space" then
-				love.timer.step()
 				self:toggle()
 			end
 		end
