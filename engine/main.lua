@@ -2,7 +2,7 @@ local newPlayback = require("playback")
 local playback = newPlayback()
 
 local newWindowRenderer = require("renderer.window")
-local renderer = newWindowRenderer()
+local renderer = newWindowRenderer(playback)
 
 local newLoader = require("loader")
 
