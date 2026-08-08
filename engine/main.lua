@@ -1,31 +1,52 @@
+local newEventBus = require("events")
 local newPlayback = require("playback")
-local playback = newPlayback()
-
 local newWindowRenderer = require("renderer.window")
-local renderer = newWindowRenderer(playback)
-
 local newLoader = require("loader")
 
-function love.keypressed(key, scancode, isrepeat)
-	if key == "escape" or key == "q" then
-		love.event.quit()
-	end
+local events = newEventBus()
 
-	playback:keypressed(key,scancode,isrepeat)
-	renderer:keypressed(key,scancode,isrepeat)
+function love.keypressed(key, scancode, isrepeat)
+	events:dispatch("keypressed", {
+		key= key,
+		scancode = scancode,
+		isrepeat = isrepeat
+	})
 end
 
 function love.mousepressed( x, y, button, istouch, presses )
-	renderer:mousepressed(x,y,button,istouch,presses)
+	events:dispatch("mousepressed", {
+		x = x,
+		y = y,
+		button = button,
+		istouch = istouch,
+		presses = presses,
+	})
 end
+
 function love.mousereleased( x, y, button, istouch, presses )
-	renderer:mousereleased(x,y,button,istouch,presses)
+	events:dispatch("mousereleased", {
+		x = x,
+		y = y,
+		button = button,
+		istouch = istouch,
+		presses = presses,
+	})
 end
+
 function love.mousemoved( x, y, dx,dy, istouch )
-	renderer:mousemoved(x,y,dx,dy,istouch)
+	events:dispatch("mousemoved", {
+		x = x,
+		y = y,
+		dx = dx,
+		dy = dy,
+		istouch = istouch,
+	})
 end
-function love.mousefocus(f)
-	renderer:mousefocus(f)
+
+function love.mousefocus( f )
+	events:dispatch("mousefocus", {
+		f = f,
+	})
 end
 
 function love.run()
@@ -35,6 +56,34 @@ function love.run()
 		print(err)
 		return
 	end
+
+	local playback = newPlayback()
+	events:on("keypressed", function(e)
+		playback:keypressed(e.key,e.scancode,e.isrepeat)
+	end)
+
+	local renderer = newWindowRenderer(playback)
+	events:on("keypressed", function(e)
+		renderer:keypressed(e.key,e.scancode,e.isrepeat)
+	end)
+	events:on("mousepressed", function(e)
+		renderer:mousepressed(e.x,e.y,e.button,e.istouch,e.presses)
+	end)
+	events:on("mousemoved", function(e)
+		renderer:mousemoved(e.x,e.y,e.dx, e.dy,e.istouch)
+	end)
+	events:on("mousefocus", function(e)
+		renderer:mousefocus(e.f)
+	end)
+	events:on("mousereleased", function(e)
+		renderer:mousereleased(e.x,e.y,e.button,e.istouch,e.presses)
+	end)
+
+	events:on("keypressed", function(e)
+		if e.key == "escape" or e.key == "q" then
+			love.event.quit()
+		end
+	end)
 
 	-- We don't want the first frame's dt to include time taken by love.load.
 	if love.timer then love.timer.step() end
