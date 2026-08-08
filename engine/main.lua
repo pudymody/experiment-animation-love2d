@@ -121,7 +121,7 @@ function love.run()
 			love.graphics.clear(loader.scene.background)
 			loader.scene:draw(playback.position)
 
-			renderer:draw(loader.canvas)
+			renderer:draw({ canvas = loader.canvas, scene = loader.scene })
 		end
 
 		if love.timer then love.timer.sleep(0.001) end
