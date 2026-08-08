@@ -1,6 +1,6 @@
 local nativefs = require("nativefs")
 
-return function(file)
+return function(file, events)
 	if file == nil then
 		return nil, "You have to provide a valid scene file to run"
 	end
@@ -12,6 +12,7 @@ return function(file)
 		fileCheckIntervalSeconds = 1,
 		scene = nil,
 		canvas = nil,
+		events = events,
 
 		update = function(self)
 			-- hotreload file based on https://github.com/kjarvi/monocle/blob/master/monocle.lua
@@ -30,6 +31,10 @@ return function(file)
 				self.fileLastModified = fileInfo.modtime
 				self.scene = loadfile(self.filePath)()
 				self.canvas = love.graphics.newCanvas(self.scene.width, self.scene.height)
+				events:dispatch("loader.update", {
+					scene = self.scene,
+					canvas = self.canvas
+				})
 				return true
 			end
 

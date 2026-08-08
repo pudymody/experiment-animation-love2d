@@ -51,13 +51,16 @@ end
 
 function love.run()
 	local file = love.arg.parseGameArguments(arg)[1]
-	local loader, err = newLoader(file)
+	local loader, err = newLoader(file, events)
 	if err ~= nil then
 		print(err)
 		return
 	end
 
 	local playback = newPlayback()
+	events:on("loader.update", function(e)
+		playback:setDuration(loader.scene:duration())
+	end)
 
 	local renderer = newWindowRenderer(playback)
 	events:on("love.keypressed", function(e)
@@ -94,9 +97,7 @@ function love.run()
 			end
 		end
 
-		if loader:update() then
-			playback:setDuration(loader.scene:duration())
-		end
+		loader:update()
 
 		-- Update dt, as we'll be passing it to update
 		if love.timer and playback.isPlaying then
