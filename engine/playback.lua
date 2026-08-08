@@ -32,12 +32,11 @@ return function()
 		end,
 
 		forward = function(self)
-			self.position = math.min(self.duration, self.position + self.positionSeekStep)
+			self:seekBy(self.positionSeekStep)
 		end,
 
 		backward = function(self)
-			self.position = self.position - self.positionSeekStep
-			self.position = math.max(self.position, 0)
+			self:seekBy(-self.positionSeekStep)
 		end,
 
 		stop = function(self)
@@ -49,6 +48,10 @@ return function()
 			self.position = self.position + dur
 			self.position = math.max(self.position, 0)
 			self.position = math.min(self.position, self.duration)
+
+			if self.position == self.duration then
+				self:pause()
+			end
 		end,
 	}
 end

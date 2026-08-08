@@ -101,9 +101,6 @@ function love.run()
 		-- Update dt, as we'll be passing it to update
 		if love.timer and playback.isPlaying then
 			playback:seekBy(love.timer.step() * 1000)
-			if playback.position == playback.duration then
-				playback:pause()
-			end
 		end
 
 		if love.graphics and love.graphics.isActive() then
