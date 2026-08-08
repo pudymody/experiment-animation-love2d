@@ -58,9 +58,6 @@ function love.run()
 	end
 
 	local playback = newPlayback()
-	events:on("keypressed", function(e)
-		playback:keypressed(e.key,e.scancode,e.isrepeat)
-	end)
 
 	local renderer = newWindowRenderer(playback)
 	events:on("keypressed", function(e)
@@ -77,12 +74,6 @@ function love.run()
 	end)
 	events:on("mousereleased", function(e)
 		renderer:mousereleased(e.x,e.y,e.button,e.istouch,e.presses)
-	end)
-
-	events:on("keypressed", function(e)
-		if e.key == "escape" or e.key == "q" then
-			love.event.quit()
-		end
 	end)
 
 	-- We don't want the first frame's dt to include time taken by love.load.

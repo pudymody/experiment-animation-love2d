@@ -50,23 +50,5 @@ return function()
 			self.position = math.max(self.position, 0)
 			self.position = math.min(self.position, self.duration)
 		end,
-
-		keypressed = function(self, key, scancode, isrepeat)
-			if key == "right" then
-				self:forward()
-			end
-
-			if key == "left" then
-				self:backward()
-			end
-
-			if key == "r" then
-				self:stop()
-			end
-
-			if key == "space" then
-				self:toggle()
-			end
-		end
 	}
 end

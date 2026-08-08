@@ -255,8 +255,28 @@ return function(playback)
 		end,
 
 		keypressed = function(self,key,scancode,isrepeat)
+			if key == "escape" or key == "q" then
+				love.event.quit()
+			end
+
 			if key == "f" then
 				toggleFullscreen()
+			end
+
+			if key == "right" then
+				self.playback:forward()
+			end
+
+			if key == "left" then
+				self.playback:backward()
+			end
+
+			if key == "r" then
+				self.playback:stop()
+			end
+
+			if key == "space" then
+				self.playback:toggle()
 			end
 		end,
 
