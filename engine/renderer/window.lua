@@ -16,6 +16,8 @@ local osc = {
 	currentOffset = 0,
 	seekbar_background = {0.3, 0.3, 0.3, 1},
 	seekbar_foreground = {1,1,1,1},
+	seekbar_offset = 0,
+	seekbar_width = 0,
 
 	x = 0,
 	y = 0,
@@ -23,6 +25,9 @@ local osc = {
 	height = 30,
 
 	playback = nil,
+	playback_wasPlaying = false,
+
+	seekbar_pressed = false,
 
 	playButton = function(self)
 		love.graphics.setColor(self.seekbar_foreground)
@@ -104,19 +109,20 @@ local osc = {
 	end,
 
 	seekbar = function(self)
-		local seekbarWidth = self.width - self.padding*2 - self.currentOffset
+		self.seekbar_width = self.width - self.padding*2 - self.currentOffset
+		self.seekbar_offset = self.currentOffset
 
 		love.graphics.setColor(self.seekbar_background)
 		love.graphics.rectangle(
 			"fill",
 			self.currentOffset + self.padding,
 			self.y + self.padding,
-			seekbarWidth,
+			self.seekbar_width,
 			self.height - self.padding * 2
 		)
 
 		love.graphics.setColor(self.seekbar_foreground)
-		local currentSeekbarWidth = seekbarWidth * (self.playback.position / self.playback.duration)
+		local currentSeekbarWidth = self.seekbar_width * (self.playback.position / self.playback.duration)
 		love.graphics.rectangle(
 			"fill",
 			self.currentOffset + self.padding,
@@ -153,12 +159,53 @@ local osc = {
 		self:seekbar()
 
 	end,
+
+	seek = function(self,x)
+		local percentage = (x - self.seekbar_offset - self.padding) / self.seekbar_width
+		percentage = math.min(percentage, 1)
+		percentage = math.max(percentage, 0)
+		self.playback.position = self.playback.duration * percentage
+	end,
+
+	-- this is super fragile as it depends on the order we draw them
+	mousepressed = function(self,x, y, button, istouch, presses )
+		if x <= self.height then
+			self.playback:toggle()
+		end
+
+		if x >= self.seekbar_offset and x <= self.seekbar_offset + self.seekbar_width then
+			self.seekbar_pressed = true
+			self:seek(x)
+			self.playback_wasPlaying = self.playback.isPlaying
+			self.playback:pause()
+		end
+	end,
+
+	mousereleased = function(self,x, y, button, istouch, presses )
+		if self.seekbar_pressed and self.playback_wasPlaying then
+			self.playback:play()
+		end
+		self.seekbar_pressed = false
+	end,
+
+	mousemoved = function(self,x, y, dx, dy, istouch )
+		if self.seekbar_pressed then
+			self:seek(x)
+		end
+	end,
+
+	mousefocus = function(self, f)
+		if not f then
+			self.seekbar_pressed = false
+		end
+	end,
 }
 
 return function(playback)
 	osc.playback = playback
 
 	return {
+		playback = playback,
 		draw = function(self, canvas)
 			local windowWidth, windowHeight = love.window.getMode()
 
@@ -181,11 +228,36 @@ return function(playback)
 			love.graphics.present()
 		end,
 
+		toggleFullscreen = function(self)
+			_, _, flags = love.window.getMode()
+			love.window.setFullscreen(not flags.fullscreen)
+		end,
+
 		keypressed = function(self,key,scancode,isrepeat)
 			if key == "f" then
-				_, _, flags = love.window.getMode()
-				love.window.setFullscreen(not flags.fullscreen)
+				self:toggleFullscreen()
 			end
+		end,
+
+		mousepressed = function(self,x, y, button, istouch, presses )
+			if y < osc.y then
+				self.playback:toggle()
+				return
+			end
+
+			osc:mousepressed(x,y,button,istouch,presses)
+		end,
+
+		mousereleased = function(self,x, y, button, istouch, presses )
+			osc:mousereleased(x,y,button,istouch,presses)
+		end,
+
+		mousemoved = function(self,x, y, dx, dy, istouch )
+			osc:mousemoved(x,y,dx,dy,istouch)
+		end,
+
+		mousefocus = function(self,f)
+			osc:mousefocus(f)
 		end,
 	}
 end

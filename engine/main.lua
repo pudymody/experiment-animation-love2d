@@ -15,6 +15,19 @@ function love.keypressed(key, scancode, isrepeat)
 	renderer:keypressed(key,scancode,isrepeat)
 end
 
+function love.mousepressed( x, y, button, istouch, presses )
+	renderer:mousepressed(x,y,button,istouch,presses)
+end
+function love.mousereleased( x, y, button, istouch, presses )
+	renderer:mousereleased(x,y,button,istouch,presses)
+end
+function love.mousemoved( x, y, dx,dy, istouch )
+	renderer:mousemoved(x,y,dx,dy,istouch)
+end
+function love.mousefocus(f)
+	renderer:mousefocus(f)
+end
+
 function love.run()
 	local file = love.arg.parseGameArguments(arg)[1]
 	local loader, err = newLoader(file)
