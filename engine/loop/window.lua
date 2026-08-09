@@ -46,9 +46,16 @@ function love.mousefocus( f )
 end
 
 return function(loader)
+	local canvas = love.graphics.newCanvas(loader.scene.width, loader.scene.height)
+	events:on("loader.update", function(scene)
+		canvas:release()
+		canvas = love.graphics.newCanvas(scene.width, scene.height)
+	end)
+
 	local playback = newPlayback()
-	events:on("loader.update", function(e)
-		playback:setDuration(loader.scene:duration())
+	playback:setDuration(loader.scene:duration())
+	events:on("loader.update", function(scene)
+		playback:setDuration(scene:duration())
 	end)
 
 	local renderer = newWindowRenderer(playback)
@@ -94,12 +101,12 @@ return function(loader)
 		end
 
 		if love.graphics and love.graphics.isActive() then
-			love.graphics.setCanvas(loader.canvas)
+			love.graphics.setCanvas(canvas)
 			love.graphics.origin()
 			love.graphics.clear(loader.scene.background)
 			loader.scene:draw(playback.position)
 
-			renderer:draw({ canvas = loader.canvas, scene = loader.scene })
+			renderer:draw({ canvas = canvas, scene = loader.scene })
 		end
 
 		if love.timer then love.timer.sleep(0.001) end

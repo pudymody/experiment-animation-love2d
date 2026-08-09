@@ -5,13 +5,12 @@ return function(file, events)
 		return nil, "You have to provide a valid scene file to run"
 	end
 
-	return {
+	local loader = {
 		filePath = file,
 		fileLastModified = 0,
 		fileLastCheck = 0,
 		fileCheckIntervalSeconds = 1,
 		scene = nil,
-		canvas = nil,
 		events = events,
 
 		update = function(self)
@@ -24,21 +23,16 @@ return function(file, events)
 			self.fileLastCheck = now
 			local fileInfo = nativefs.getInfo(self.filePath)
 			if fileInfo ~= nil and self.fileLastModified ~= fileInfo.modtime then
-				if self.canvas ~= nil then
-					self.canvas:release()
-				end
-
 				self.fileLastModified = fileInfo.modtime
 				self.scene = loadfile(self.filePath)()
-				self.canvas = love.graphics.newCanvas(self.scene.width, self.scene.height)
-				events:dispatch("loader.update", {
-					scene = self.scene,
-					canvas = self.canvas
-				})
+				events:dispatch("loader.update", self.scene)
 				return true
 			end
 
 			return false
 		end
 	}
+
+	loader:update()
+	return loader
 end
