@@ -1,4 +1,6 @@
 local rectangle = require("objects.rectangle")
+local point = require("objects.point")
+local line = require("objects.line")
 local circle = require("objects.circle")
 local arc = require("objects.arc")
 local ellipse = require("objects.ellipse")
@@ -207,6 +209,66 @@ function scene:ellipse(o)
 	local e = ellipse(o)
 	self:add(e)
 	return e
+end
+
+function scene:point(o)
+	if o.x == nil then
+		o.x = 0
+	end
+	if type(o.x) == "number" then
+		o.x = timeline(o.x)
+		o.x.context = self.context
+	end
+
+	if o.y == nil then
+		o.y = 0
+	end
+	if type(o.y) == "number" then
+		o.y = timeline(o.y)
+		o.y.context = self.context
+	end
+
+	return point(o) 
+end
+
+function scene:line(o)
+	if o.startPoint == nil then
+		o.startPoint = { x = 0, y = 0 } 
+	end
+	if type(o.startPoint.x) == "number" then
+		o.startPoint.x = timeline(o.startPoint.x)
+		o.startPoint.x.context = self.context
+	end
+	if type(o.startPoint.y) == "number" then
+		o.startPoint.y = timeline(o.startPoint.y)
+		o.startPoint.y.context = self.context
+	end
+	if o.endPoint == nil then
+		o.endPoint = { x = 0, y = 0 } 
+	end
+	if type(o.endPoint.x) == "number" then
+		o.endPoint.x = timeline(o.endPoint.x)
+		o.endPoint.x.context = self.context
+	end
+	if type(o.endPoint.y) == "number" then
+		o.endPoint.y = timeline(o.endPoint.y)
+		o.endPoint.y.context = self.context
+	end
+	if o.strokeWidth == nil then
+		o.strokeWidth = 0
+	end
+	if type(o.strokeWidth) == "number" then
+		o.strokeWidth = timeline(o.strokeWidth)
+		o.strokeWidth.context = self.context
+	end
+
+	if o.strokeColor == nil then
+		o.strokeColor = {0,0,0,1}
+	end
+
+	local l = line(o)
+	self:add(l)
+	return l
 end
 
 function scene:rectangle(o)
