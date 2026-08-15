@@ -1,4 +1,5 @@
 local rectangle = require("objects.rectangle")
+local circle = require("objects.circle")
 local timeline = require("timeline")
 
 local scene = {}
@@ -38,6 +39,53 @@ end
 function scene:add(o)
 	table.insert(self.objs, o)
 end
+
+function scene:circle(o)
+	if o.x == nil then
+		o.x = 0
+	end
+	if type(o.x) == "number" then
+		o.x = timeline(o.x)
+		o.x.context = self.context
+	end
+
+	if o.y == nil then
+		o.y = 0
+	end
+	if type(o.y) == "number" then
+		o.y = timeline(o.y)
+		o.y.context = self.context
+	end
+
+	if o.radius == nil then
+		o.radius = 100
+	end
+	if type(o.radius) == "number" then
+		o.radius = timeline(o.radius)
+		o.radius.context = self.context
+	end
+
+	if o.strokeWidth == nil then
+		o.strokeWidth = 0
+	end
+	if type(o.strokeWidth) == "number" then
+		o.strokeWidth = timeline(o.strokeWidth)
+		o.strokeWidth.context = self.context
+	end
+
+	if o.background == nil then
+		o.background = {1,1,1,1}
+	end
+	if o.strokeColor == nil then
+		o.strokeColor = {0,0,0,1}
+	end
+
+	local c = circle(o)
+	self:add(c)
+	return c
+end
+
+
 
 function scene:rectangle(o)
 	if o.x == nil then
