@@ -1,6 +1,7 @@
 local rectangle = require("objects.rectangle")
 local circle = require("objects.circle")
 local arc = require("objects.arc")
+local ellipse = require("objects.ellipse")
 local timeline = require("timeline")
 
 local scene = {}
@@ -145,6 +146,67 @@ function scene:arc(o)
 	local a = arc(o)
 	self:add(a)
 	return a
+end
+
+function scene:ellipse(o)
+	if o.x == nil then
+		o.x = 0
+	end
+	if type(o.x) == "number" then
+		o.x = timeline(o.x)
+		o.x.context = self.context
+	end
+
+	if o.y == nil then
+		o.y = 0
+	end
+	if type(o.y) == "number" then
+		o.y = timeline(o.y)
+		o.y.context = self.context
+	end
+
+	if o.radiusX == nil then
+		o.radiusX = 100
+	end
+	if type(o.radiusX) == "number" then
+		o.radiusX = timeline(o.radiusX)
+		o.radiusX.context = self.context
+	end
+
+	if o.radiusY == nil then
+		o.radiusY = 50
+	end
+	if type(o.radiusY) == "number" then
+		o.radiusY = timeline(o.radiusY)
+		o.radiusY.context = self.context
+	end
+
+	if o.strokeWidth == nil then
+		o.strokeWidth = 0
+	end
+	if type(o.strokeWidth) == "number" then
+		o.strokeWidth = timeline(o.strokeWidth)
+		o.strokeWidth.context = self.context
+	end
+
+	if o.rotation == nil then
+		o.rotation = 0
+	end
+	if type(o.rotation) == "number" then
+		o.rotation = timeline(o.rotation)
+		o.rotation.context = self.context
+	end
+
+	if o.background == nil then
+		o.background = {1,1,1,1}
+	end
+	if o.strokeColor == nil then
+		o.strokeColor = {0,0,0,1}
+	end
+
+	local e = ellipse(o)
+	self:add(e)
+	return e
 end
 
 function scene:rectangle(o)

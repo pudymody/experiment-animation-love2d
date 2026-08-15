@@ -1,0 +1,50 @@
+local ellipse = {
+	x = function(time) return 0 end,
+	y = function(time) return 0 end,
+	radiusX = function(time) return 100 end,
+	radiusY = function(time) return 100 end,
+
+	background = {0,0,0,1},
+
+	strokeColor = {1,0,0,1},
+	strokeWidth = function(time) return 1 end,
+
+	rotation = function(time) return 0 end,
+}
+ellipse.__index = ellipse
+
+function ellipse:draw(time)
+	local x = self.x(time)
+	local y = self.y(time)
+	local radiusX = self.radiusX(time)
+	local radiusY = self.radiusY(time)
+	local rotation = self.rotation(time)
+
+	love.graphics.translate(x,y)
+	love.graphics.rotate(rotation)
+
+	love.graphics.setColor(self.background)
+	love.graphics.ellipse(
+		"fill",
+		0,
+		0,
+		radiusX,
+		radiusY	
+	)
+
+	love.graphics.setColor(self.strokeColor)
+	love.graphics.setLineWidth(self.strokeWidth(time))
+	love.graphics.ellipse(
+		"line",
+		0,
+		0,
+		radiusX,
+		radiusY
+	)
+end
+
+return function(opts)
+	local o = opts or {}
+	setmetatable(o, ellipse)
+	return o
+end
