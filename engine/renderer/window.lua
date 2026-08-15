@@ -232,22 +232,22 @@ return function(playback)
 	return {
 		osc = osc,
 		playback = playback,
-		draw = function(self, scene)
+		draw = function(self, canvas)
 			local windowWidth, windowHeight = love.window.getMode()
 
 			self.osc.y = windowHeight - self.osc.height
 			self.osc.width = windowWidth
 			windowHeight = windowHeight - self.osc.height
 
-			local sceneWidth = scene.canvas:getWidth() 
-			local sceneHeight = scene.canvas:getHeight()
+			local sceneWidth = canvas:getWidth() 
+			local sceneHeight = canvas:getHeight()
 			local scale = math.min( windowWidth / sceneWidth, windowHeight / sceneHeight)
 			local offsetX = (windowWidth - (sceneWidth * scale)) / 2
 			local offsetY = (windowHeight - (sceneHeight * scale)) / 2
 
 			love.graphics.reset()
 			love.graphics.clear(0,0,0,1)
-			love.graphics.draw(scene.canvas, offsetX, offsetY, 0, scale, scale)
+			love.graphics.draw(canvas, offsetX, offsetY, 0, scale, scale)
 
 			self.osc:draw()
 
