@@ -40,24 +40,59 @@ function scene:add(o)
 end
 
 function scene:rectangle(o)
+	if o.x == nil then
+		o.x = 0
+	end
 	if type(o.x) == "number" then
 		o.x = timeline(o.x)
 		o.x.context = self.context
 	end
 
+	if o.y == nil then
+		o.y = 0
+	end
 	if type(o.y) == "number" then
 		o.y = timeline(o.y)
 		o.y.context = self.context
 	end
 
+	if o.width == nil then
+		o.width = 100
+	end
 	if type(o.width) == "number" then
 		o.width = timeline(o.width)
 		o.width.context = self.context
 	end
 
+	if o.height == nil then
+		o.height = 100
+	end
 	if type(o.height) == "number" then
 		o.height = timeline(o.height)
 		o.height.context = self.context
+	end
+
+	if o.strokeWidth == nil then
+		o.strokeWidth = 0
+	end
+	if type(o.strokeWidth) == "number" then
+		o.strokeWidth = timeline(o.strokeWidth)
+		o.strokeWidth.context = self.context
+	end
+
+	if o.rotation == nil then
+		o.rotation = 0
+	end
+	if type(o.rotation) == "number" then
+		o.rotation = timeline(o.rotation)
+		o.rotation.context = self.context
+	end
+
+	if o.background == nil then
+		o.background = {1,1,1,1}
+	end
+	if o.strokeColor == nil then
+		o.strokeColor = {0,0,0,1}
 	end
 
 	local r = rectangle(o)
