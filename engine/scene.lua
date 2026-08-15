@@ -6,7 +6,71 @@ local arc = require("objects.arc")
 local ellipse = require("objects.ellipse")
 local timeline = require("timeline")
 
-local scene = {}
+local function mergeTable(t1,t2)
+	for k,v in pairs(t2) do
+		if t1[k] == nil then
+			t1[k] = v
+		end
+	end
+end
+
+local scene = {
+	width = 1920,
+	height = 1080,
+	fps = 60,
+	background = {1,1,1,1},
+
+	defaults = {
+		line = {
+			startPoint = { x = 0, y = 0 },
+			endPoint = { x = 0, y = 0 },
+			strokeWidth = 1,
+			strokeColor = {0,0,0,1},
+		},
+		circle = {
+			x = 0,
+			y = 0,
+			radius = 100,
+			strokeWidth = 1,
+			strokeColor = {0,0,0,1},
+			background = {1,1,1,1},
+		},
+		arc = {
+			x = 0,
+			y = 0,
+			radius = 100,
+			startAngle = 0,
+			endAngle = math.pi * 2,
+			strokeWidth = 1,
+			strokeColor = {0,0,0,1},
+			background = {1,1,1,1},
+		},
+		ellipse = {
+			x = 0,
+			y = 0,
+			radiusX = 100,
+			radiusY = 50,
+			rotation = 0,
+			strokeWidth = 1,
+			strokeColor = {0,0,0,1},
+			background = {1,1,1,1},
+		},
+		point = {
+			x = 0,
+			y = 0,
+		},
+		rectangle = {
+			x = 0,
+			y = 0,
+			width = 100,
+			height = 50,
+			rotation = 0,
+			strokeWidth = 1,
+			strokeColor = {0,0,0,1},
+			background = {1,1,1,1},
+		},
+	},
+}
 scene.__index = scene
 
 function scene:draw(time)
@@ -45,43 +109,26 @@ function scene:add(o)
 end
 
 function scene:circle(o)
-	if o.x == nil then
-		o.x = 0
-	end
+	mergeTable(o, self.defaults.circle)
+
 	if type(o.x) == "number" then
 		o.x = timeline(o.x)
 		o.x.context = self.context
 	end
 
-	if o.y == nil then
-		o.y = 0
-	end
 	if type(o.y) == "number" then
 		o.y = timeline(o.y)
 		o.y.context = self.context
 	end
 
-	if o.radius == nil then
-		o.radius = 100
-	end
 	if type(o.radius) == "number" then
 		o.radius = timeline(o.radius)
 		o.radius.context = self.context
 	end
 
-	if o.strokeWidth == nil then
-		o.strokeWidth = 0
-	end
 	if type(o.strokeWidth) == "number" then
 		o.strokeWidth = timeline(o.strokeWidth)
 		o.strokeWidth.context = self.context
-	end
-
-	if o.background == nil then
-		o.background = {1,1,1,1}
-	end
-	if o.strokeColor == nil then
-		o.strokeColor = {0,0,0,1}
 	end
 
 	local c = circle(o)
@@ -90,59 +137,36 @@ function scene:circle(o)
 end
 
 function scene:arc(o)
-	if o.x == nil then
-		o.x = 0
-	end
+	mergeTable(o, self.defaults.arc)
+
 	if type(o.x) == "number" then
 		o.x = timeline(o.x)
 		o.x.context = self.context
 	end
 
-	if o.y == nil then
-		o.y = 0
-	end
 	if type(o.y) == "number" then
 		o.y = timeline(o.y)
 		o.y.context = self.context
 	end
 
-	if o.radius == nil then
-		o.radius = 100
-	end
 	if type(o.radius) == "number" then
 		o.radius = timeline(o.radius)
 		o.radius.context = self.context
 	end
 
-	if o.startAngle == nil then
-		o.startAngle = 0 
-	end
 	if type(o.startAngle) == "number" then
 		o.startAngle = timeline(o.startAngle)
 		o.startAngle.context = self.context
 	end
 
-	if o.endAngle == nil then
-		o.endAngle = 0 
-	end
 	if type(o.endAngle) == "number" then
 		o.endAngle = timeline(o.endAngle)
 		o.endAngle.context = self.context
 	end
 
-	if o.strokeWidth == nil then
-		o.strokeWidth = 0
-	end
 	if type(o.strokeWidth) == "number" then
 		o.strokeWidth = timeline(o.strokeWidth)
 		o.strokeWidth.context = self.context
-	end
-
-	if o.background == nil then
-		o.background = {1,1,1,1}
-	end
-	if o.strokeColor == nil then
-		o.strokeColor = {0,0,0,1}
 	end
 
 	local a = arc(o)
@@ -151,59 +175,36 @@ function scene:arc(o)
 end
 
 function scene:ellipse(o)
-	if o.x == nil then
-		o.x = 0
-	end
+	mergeTable(o, self.defaults.ellipse)
+
 	if type(o.x) == "number" then
 		o.x = timeline(o.x)
 		o.x.context = self.context
 	end
 
-	if o.y == nil then
-		o.y = 0
-	end
 	if type(o.y) == "number" then
 		o.y = timeline(o.y)
 		o.y.context = self.context
 	end
 
-	if o.radiusX == nil then
-		o.radiusX = 100
-	end
 	if type(o.radiusX) == "number" then
 		o.radiusX = timeline(o.radiusX)
 		o.radiusX.context = self.context
 	end
 
-	if o.radiusY == nil then
-		o.radiusY = 50
-	end
 	if type(o.radiusY) == "number" then
 		o.radiusY = timeline(o.radiusY)
 		o.radiusY.context = self.context
 	end
 
-	if o.strokeWidth == nil then
-		o.strokeWidth = 0
-	end
 	if type(o.strokeWidth) == "number" then
 		o.strokeWidth = timeline(o.strokeWidth)
 		o.strokeWidth.context = self.context
 	end
 
-	if o.rotation == nil then
-		o.rotation = 0
-	end
 	if type(o.rotation) == "number" then
 		o.rotation = timeline(o.rotation)
 		o.rotation.context = self.context
-	end
-
-	if o.background == nil then
-		o.background = {1,1,1,1}
-	end
-	if o.strokeColor == nil then
-		o.strokeColor = {0,0,0,1}
 	end
 
 	local e = ellipse(o)
@@ -212,17 +213,13 @@ function scene:ellipse(o)
 end
 
 function scene:point(o)
-	if o.x == nil then
-		o.x = 0
-	end
+	mergeTable(o, self.defaults.point)
+
 	if type(o.x) == "number" then
 		o.x = timeline(o.x)
 		o.x.context = self.context
 	end
 
-	if o.y == nil then
-		o.y = 0
-	end
 	if type(o.y) == "number" then
 		o.y = timeline(o.y)
 		o.y.context = self.context
@@ -232,9 +229,8 @@ function scene:point(o)
 end
 
 function scene:line(o)
-	if o.startPoint == nil then
-		o.startPoint = { x = 0, y = 0 } 
-	end
+	mergeTable(o, self.defaults.line)
+
 	if type(o.startPoint.x) == "number" then
 		o.startPoint.x = timeline(o.startPoint.x)
 		o.startPoint.x.context = self.context
@@ -242,9 +238,6 @@ function scene:line(o)
 	if type(o.startPoint.y) == "number" then
 		o.startPoint.y = timeline(o.startPoint.y)
 		o.startPoint.y.context = self.context
-	end
-	if o.endPoint == nil then
-		o.endPoint = { x = 0, y = 0 } 
 	end
 	if type(o.endPoint.x) == "number" then
 		o.endPoint.x = timeline(o.endPoint.x)
@@ -254,77 +247,47 @@ function scene:line(o)
 		o.endPoint.y = timeline(o.endPoint.y)
 		o.endPoint.y.context = self.context
 	end
-	if o.strokeWidth == nil then
-		o.strokeWidth = 0
-	end
 	if type(o.strokeWidth) == "number" then
 		o.strokeWidth = timeline(o.strokeWidth)
 		o.strokeWidth.context = self.context
 	end
-
-	if o.strokeColor == nil then
-		o.strokeColor = {0,0,0,1}
-	end
-
+	
 	local l = line(o)
 	self:add(l)
 	return l
 end
 
 function scene:rectangle(o)
-	if o.x == nil then
-		o.x = 0
-	end
+	mergeTable(o, self.defaults.rectangle)
+
 	if type(o.x) == "number" then
 		o.x = timeline(o.x)
 		o.x.context = self.context
 	end
 
-	if o.y == nil then
-		o.y = 0
-	end
 	if type(o.y) == "number" then
 		o.y = timeline(o.y)
 		o.y.context = self.context
 	end
 
-	if o.width == nil then
-		o.width = 100
-	end
 	if type(o.width) == "number" then
 		o.width = timeline(o.width)
 		o.width.context = self.context
 	end
 
-	if o.height == nil then
-		o.height = 100
-	end
 	if type(o.height) == "number" then
 		o.height = timeline(o.height)
 		o.height.context = self.context
 	end
 
-	if o.strokeWidth == nil then
-		o.strokeWidth = 0
-	end
 	if type(o.strokeWidth) == "number" then
 		o.strokeWidth = timeline(o.strokeWidth)
 		o.strokeWidth.context = self.context
 	end
 
-	if o.rotation == nil then
-		o.rotation = 0
-	end
 	if type(o.rotation) == "number" then
 		o.rotation = timeline(o.rotation)
 		o.rotation.context = self.context
-	end
-
-	if o.background == nil then
-		o.background = {1,1,1,1}
-	end
-	if o.strokeColor == nil then
-		o.strokeColor = {0,0,0,1}
 	end
 
 	local r = rectangle(o)
@@ -352,16 +315,10 @@ local function newContext()
 end
 
 return function(opts)
-	local o = {
-		width = opts.width or 1920,
-		height = opts.height or 1080,
-		fps = opts.fps or 60,
-		background = opts.background or {1,1,1,1},
 
-		objs = {},
-		context = newContext(),
-	}
-	setmetatable(o, scene)
+	opts.objs = {}
+	opts.context = newContext()
+	setmetatable(opts, scene)
 
-	return o
+	return opts 
 end
