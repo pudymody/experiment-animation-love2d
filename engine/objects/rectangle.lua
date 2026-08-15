@@ -10,6 +10,8 @@ local rectangle = {
 	strokeWidth = function(time) return 1 end,
 
 	rotation = function(time) return 0 end,
+
+	__type = "rectangle",
 }
 rectangle.__index = rectangle
 

@@ -10,6 +10,8 @@ local line = {
 
 	strokeColor = {1,0,0,1},
 	strokeWidth = function(time) return 1 end,
+
+	__type = "line",
 }
 line.__index = line 
 

@@ -1,6 +1,8 @@
 local point = {
 	x = function(time) return 0 end,
 	y = function(time) return 0 end,
+
+	__type = "point",
 }
 point.__index = point 
 

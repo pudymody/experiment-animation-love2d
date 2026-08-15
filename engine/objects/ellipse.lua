@@ -10,6 +10,8 @@ local ellipse = {
 	strokeWidth = function(time) return 1 end,
 
 	rotation = function(time) return 0 end,
+
+	__type = "ellipse",
 }
 ellipse.__index = ellipse
 

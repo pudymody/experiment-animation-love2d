@@ -7,6 +7,8 @@ local circle = {
 
 	strokeColor = {1,0,0,1},
 	strokeWidth = function(time) return 1 end,
+
+	__type = "circle",
 }
 circle.__index = circle
 

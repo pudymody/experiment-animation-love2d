@@ -14,6 +14,18 @@ local function mergeTable(t1,t2)
 	end
 end
 
+local function typeof(o)
+	if type(o) != 'table' then
+		return type(o)
+	end
+
+	if o.__type != nil then
+		return o.__type
+	end
+
+	return "table"
+end
+
 local scene = {
 	width = 1920,
 	height = 1080,
@@ -106,7 +118,7 @@ end
 
 function scene:timelineProps(o)
 	for k,v in pairs(o) do
-		if type(o[k]) == "number" then
+		if typeof(o[k]) == "number" then
 			o[k] = self:timeline(o[k])
 		end
 	end
@@ -155,19 +167,19 @@ function scene:line(o)
 	self:timelineProps(o)
 
 	-- TODO: Should it be a deep constructor?
-	if type(o.startPoint.x) == "number" then
+	if typeof(o.startPoint.x) == "number" then
 		o.startPoint.x = timeline(o.startPoint.x)
 		o.startPoint.x.context = self.context
 	end
-	if type(o.startPoint.y) == "number" then
+	if typeof(o.startPoint.y) == "number" then
 		o.startPoint.y = timeline(o.startPoint.y)
 		o.startPoint.y.context = self.context
 	end
-	if type(o.endPoint.x) == "number" then
+	if typeof(o.endPoint.x) == "number" then
 		o.endPoint.x = timeline(o.endPoint.x)
 		o.endPoint.x.context = self.context
 	end
-	if type(o.endPoint.y) == "number" then
+	if typeof(o.endPoint.y) == "number" then
 		o.endPoint.y = timeline(o.endPoint.y)
 		o.endPoint.y.context = self.context
 	end

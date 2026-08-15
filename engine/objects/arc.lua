@@ -11,6 +11,8 @@ local arc = {
 
 	strokeColor = {1,0,0,1},
 	strokeWidth = function(time) return 1 end,
+
+	__type = "arc",
 }
 arc.__index = arc
 
