@@ -104,32 +104,21 @@ function scene:timeline(v)
 	return o
 end
 
+function scene:timelineProps(o)
+	for k,v in pairs(o) do
+		if type(o[k]) == "number" then
+			o[k] = self:timeline(o[k])
+		end
+	end
+end
+
 function scene:add(o)
 	table.insert(self.objs, o)
 end
 
 function scene:circle(o)
 	mergeTable(o, self.defaults.circle)
-
-	if type(o.x) == "number" then
-		o.x = timeline(o.x)
-		o.x.context = self.context
-	end
-
-	if type(o.y) == "number" then
-		o.y = timeline(o.y)
-		o.y.context = self.context
-	end
-
-	if type(o.radius) == "number" then
-		o.radius = timeline(o.radius)
-		o.radius.context = self.context
-	end
-
-	if type(o.strokeWidth) == "number" then
-		o.strokeWidth = timeline(o.strokeWidth)
-		o.strokeWidth.context = self.context
-	end
+	self:timelineProps(o)
 
 	local c = circle(o)
 	self:add(c)
@@ -138,36 +127,7 @@ end
 
 function scene:arc(o)
 	mergeTable(o, self.defaults.arc)
-
-	if type(o.x) == "number" then
-		o.x = timeline(o.x)
-		o.x.context = self.context
-	end
-
-	if type(o.y) == "number" then
-		o.y = timeline(o.y)
-		o.y.context = self.context
-	end
-
-	if type(o.radius) == "number" then
-		o.radius = timeline(o.radius)
-		o.radius.context = self.context
-	end
-
-	if type(o.startAngle) == "number" then
-		o.startAngle = timeline(o.startAngle)
-		o.startAngle.context = self.context
-	end
-
-	if type(o.endAngle) == "number" then
-		o.endAngle = timeline(o.endAngle)
-		o.endAngle.context = self.context
-	end
-
-	if type(o.strokeWidth) == "number" then
-		o.strokeWidth = timeline(o.strokeWidth)
-		o.strokeWidth.context = self.context
-	end
+	self:timelineProps(o)
 
 	local a = arc(o)
 	self:add(a)
@@ -176,36 +136,7 @@ end
 
 function scene:ellipse(o)
 	mergeTable(o, self.defaults.ellipse)
-
-	if type(o.x) == "number" then
-		o.x = timeline(o.x)
-		o.x.context = self.context
-	end
-
-	if type(o.y) == "number" then
-		o.y = timeline(o.y)
-		o.y.context = self.context
-	end
-
-	if type(o.radiusX) == "number" then
-		o.radiusX = timeline(o.radiusX)
-		o.radiusX.context = self.context
-	end
-
-	if type(o.radiusY) == "number" then
-		o.radiusY = timeline(o.radiusY)
-		o.radiusY.context = self.context
-	end
-
-	if type(o.strokeWidth) == "number" then
-		o.strokeWidth = timeline(o.strokeWidth)
-		o.strokeWidth.context = self.context
-	end
-
-	if type(o.rotation) == "number" then
-		o.rotation = timeline(o.rotation)
-		o.rotation.context = self.context
-	end
+	self:timelineProps(o)
 
 	local e = ellipse(o)
 	self:add(e)
@@ -214,23 +145,16 @@ end
 
 function scene:point(o)
 	mergeTable(o, self.defaults.point)
-
-	if type(o.x) == "number" then
-		o.x = timeline(o.x)
-		o.x.context = self.context
-	end
-
-	if type(o.y) == "number" then
-		o.y = timeline(o.y)
-		o.y.context = self.context
-	end
+	self:timelineProps(o)
 
 	return point(o) 
 end
 
 function scene:line(o)
 	mergeTable(o, self.defaults.line)
+	self:timelineProps(o)
 
+	-- TODO: Should it be a deep constructor?
 	if type(o.startPoint.x) == "number" then
 		o.startPoint.x = timeline(o.startPoint.x)
 		o.startPoint.x.context = self.context
@@ -247,10 +171,6 @@ function scene:line(o)
 		o.endPoint.y = timeline(o.endPoint.y)
 		o.endPoint.y.context = self.context
 	end
-	if type(o.strokeWidth) == "number" then
-		o.strokeWidth = timeline(o.strokeWidth)
-		o.strokeWidth.context = self.context
-	end
 	
 	local l = line(o)
 	self:add(l)
@@ -259,36 +179,7 @@ end
 
 function scene:rectangle(o)
 	mergeTable(o, self.defaults.rectangle)
-
-	if type(o.x) == "number" then
-		o.x = timeline(o.x)
-		o.x.context = self.context
-	end
-
-	if type(o.y) == "number" then
-		o.y = timeline(o.y)
-		o.y.context = self.context
-	end
-
-	if type(o.width) == "number" then
-		o.width = timeline(o.width)
-		o.width.context = self.context
-	end
-
-	if type(o.height) == "number" then
-		o.height = timeline(o.height)
-		o.height.context = self.context
-	end
-
-	if type(o.strokeWidth) == "number" then
-		o.strokeWidth = timeline(o.strokeWidth)
-		o.strokeWidth.context = self.context
-	end
-
-	if type(o.rotation) == "number" then
-		o.rotation = timeline(o.rotation)
-		o.rotation.context = self.context
-	end
+	self:timelineProps(o)
 
 	local r = rectangle(o)
 	self:add(r)
