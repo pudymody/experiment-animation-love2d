@@ -1,3 +1,5 @@
+local colors = require("colors")
+
 local line = {
 	startPoint = {
 		x = function(time) return 0 end,
@@ -8,7 +10,7 @@ local line = {
 		y = function(time) return 0 end,
 	},
 
-	strokeColor = {1,0,0,1},
+	strokeColor = colors.yin_dark,
 	strokeWidth = function(time) return 1 end,
 
 	__type = "line",

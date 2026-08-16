@@ -1,3 +1,5 @@
+local colors = require("colors")
+
 local arc = {
 	x = function(time) return 0 end,
 	y = function(time) return 0 end,
@@ -7,9 +9,9 @@ local arc = {
 
 	arcType = "open",
 
-	background = {0,0,0,1},
+	background = colors.yin_dark,
 
-	strokeColor = {1,0,0,1},
+	strokeColor = colors.red,
 	strokeWidth = function(time) return 1 end,
 
 	__type = "arc",

@@ -1,3 +1,5 @@
+local colors = require("colors")
+
 -- https://forums.mudlet.org/viewtopic.php?t=3258
 function parseTime(milliseconds)
   local totalseconds = math.floor(milliseconds / 1000)
@@ -16,11 +18,11 @@ function toggleFullscreen()
 end
 
 local osc = {
-	background = {0.2,0.2,0.2,1},
+	background = colors.yin_dark,
 	padding = 5,
 	currentOffset = 0,
-	seekbar_background = {0.3, 0.3, 0.3, 1},
-	seekbar_foreground = {1,1,1,1},
+	seekbar_background = colors.yin,
+	seekbar_foreground = colors.white,
 	seekbar_offset = 0,
 	seekbar_width = 0,
 
@@ -246,7 +248,7 @@ return function(playback)
 			local offsetY = (windowHeight - (sceneHeight * scale)) / 2
 
 			love.graphics.reset()
-			love.graphics.clear(0,0,0,1)
+			love.graphics.clear(colors.black)
 			love.graphics.draw(canvas, offsetX, offsetY, 0, scale, scale)
 
 			self.osc:draw()

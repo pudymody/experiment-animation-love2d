@@ -1,3 +1,5 @@
+local colors = require("colors")
+
 local rectangle = require("objects.rectangle")
 local point = require("objects.point")
 local line = require("objects.line")
@@ -30,22 +32,22 @@ local scene = {
 	width = 1920,
 	height = 1080,
 	fps = 60,
-	background = {1,1,1,1},
+	background = colors.white,
 
 	defaults = {
 		line = {
 			startPoint = { x = 0, y = 0 },
 			endPoint = { x = 0, y = 0 },
 			strokeWidth = 1,
-			strokeColor = {0,0,0,1},
+			strokeColor = colors.yin_dark,
 		},
 		circle = {
 			x = 0,
 			y = 0,
 			radius = 100,
 			strokeWidth = 1,
-			strokeColor = {0,0,0,1},
-			background = {1,1,1,1},
+			strokeColor = colors.yin_dark,
+			background = colors.white,
 		},
 		arc = {
 			x = 0,
@@ -54,8 +56,8 @@ local scene = {
 			startAngle = 0,
 			endAngle = math.pi * 2,
 			strokeWidth = 1,
-			strokeColor = {0,0,0,1},
-			background = {1,1,1,1},
+			strokeColor = colors.yin_dark,
+			background = colors.white,
 		},
 		ellipse = {
 			x = 0,
@@ -64,8 +66,8 @@ local scene = {
 			radiusY = 50,
 			rotation = 0,
 			strokeWidth = 1,
-			strokeColor = {0,0,0,1},
-			background = {1,1,1,1},
+			strokeColor = colors.yin_dark,
+			background = colors.white,
 		},
 		point = {
 			x = 0,
@@ -78,8 +80,8 @@ local scene = {
 			height = 50,
 			rotation = 0,
 			strokeWidth = 1,
-			strokeColor = {0,0,0,1},
-			background = {1,1,1,1},
+			strokeColor = colors.yin_dark,
+			background = colors.white,
 		},
 	},
 }

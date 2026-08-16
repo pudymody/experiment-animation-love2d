@@ -1,11 +1,13 @@
+local colors = require("colors")
+
 local circle = {
 	x = function(time) return 0 end,
 	y = function(time) return 0 end,
 	radius = function(time) return 100 end,
 
-	background = {0,0,0,1},
+	background = colors.yin_dark,
 
-	strokeColor = {1,0,0,1},
+	strokeColor = colors.red,
 	strokeWidth = function(time) return 1 end,
 
 	__type = "circle",
