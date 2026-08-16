@@ -9,14 +9,14 @@ return function(file, events)
 		filePath = file,
 		fileLastModified = 0,
 		fileLastCheck = 0,
-		fileCheckIntervalSeconds = 1,
+		fileCheckIntervalMS = 250,
 		scene = nil,
 		events = events,
 
 		update = function(self)
 			-- hotreload file based on https://github.com/kjarvi/monocle/blob/master/monocle.lua
-			local now = os.time()
-			if now - self.fileLastCheck < self.fileCheckIntervalSeconds then
+			local now = love.timer.getTime() * 1000
+			if now - self.fileLastCheck < self.fileCheckIntervalMS and self.fileLastCheck > 0 then
 				return false
 			end
 
