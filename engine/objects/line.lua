@@ -10,7 +10,7 @@ local line = {
 		y = function(time) return 0 end,
 	},
 
-	strokeColor = colors.yin_dark,
+	strokeColor = function(time) return colors.yin_dark end,
 	strokeWidth = function(time) return 1 end,
 
 	__type = "line",
@@ -18,7 +18,7 @@ local line = {
 line.__index = line 
 
 function line:draw(time)
-	love.graphics.setColor(self.strokeColor)
+	love.graphics.setColor(self.strokeColor(time))
 	love.graphics.setLineWidth(self.strokeWidth(time))
 	love.graphics.line(
 		self.startPoint.x(time),

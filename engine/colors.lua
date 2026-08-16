@@ -1,3 +1,5 @@
+local std = require("std")
+
 local color = {
 	0,
 	0,
@@ -16,6 +18,10 @@ local color = {
 		end
 		if k == "a" then
 			return self[4] * 255
+		end
+
+		if k == "__type" then
+			return "color"
 		end
 
 		return nil
@@ -39,8 +45,6 @@ local color = {
 			return
 		end
 	end,
-
-	__type = "color",
 }
 
 local function new(opt)
@@ -56,6 +60,51 @@ local function new(opt)
 	return o
 end
 
+color.__add = function(a,b)
+	if std.typeof(a) != std.typeof(b) and std.typeof(a) != "color" then
+		error(string.format("cant add %s with %s", std.typeof(a), std.typeof(b)))
+	end
+
+	local red = a.r + b.r
+	local green = a.g + b.g
+	local blue = a.b + b.b
+	local alpha = a.a + b.a
+
+	return new{red, green, blue, alpha}
+end
+color.__sub = function(a,b)
+	if std.typeof(a) != std.typeof(b) and std.typeof(a) != "color" then
+		error(string.format("cant sub %s with %s", std.typeof(a), std.typeof(b)))
+	end
+
+	local red = a.r - b.r
+	local green = a.g - b.g
+	local blue = a.b - b.b
+	local alpha = a.a - b.a
+
+	return new{red, green, blue, alpha}
+end
+color.__mul = function(a,b)
+	local typeA = std.typeof(a)
+	local typeB = std.typeof(b)
+
+	if typeB == "color" and typeA == "number" then
+		-- always deal with color*number
+		return color.__mul(b,a)
+	end
+
+	if typeA != 'color' or typeB != "number" then
+		error(string.format("cant mul %s with %s", std.typeof(a), std.typeof(b)))
+	end
+
+	local red = a.r*b
+	local green = a.g*b
+	local blue = a.b*b
+	local alpha = a.a*b
+
+	return new{red, green, blue, alpha}
+
+end
 -- https://uchu.style/
 -- duck.ai to convert the src lch to lua rgb
 return {

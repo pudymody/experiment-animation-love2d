@@ -6,9 +6,9 @@ local rectangle = {
 	width = function(time) return 100 end,
 	height = function(time) return 100 end,
 
-	background = colors.yin_dark,
+	background = function(time) return colors.yin_dark end,
 
-	strokeColor = colors.red,
+	strokeColor = function(time) return colors.red end,
 	strokeWidth = function(time) return 1 end,
 
 	rotation = function(time) return 0 end,
