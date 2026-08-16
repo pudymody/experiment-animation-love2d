@@ -8,6 +8,8 @@ local polygon = {
 	strokeColor = function(time) return colors.red end,
 	strokeWidth = function(time) return 1 end,
 
+	closed = false,
+
 	origin = "",
 	rotation = function(time) return 0 end,
 
@@ -22,6 +24,11 @@ function polygon:draw(time)
 		table.insert(points, v.y(time))
 	end
 
+	if self.closed then
+		table.insert(points, self.points[1].x(time))
+		table.insert(points, self.points[1].y(time))
+	end
+
 	-- local rotation = self.rotation(time)
 	--
 	-- love.graphics.translate(x,y)
@@ -32,20 +39,19 @@ function polygon:draw(time)
 	-- 	yOffset = -height/2
 	-- end
 
-	love.graphics.setColor(self.background(time))
-	love.graphics.polygon(
-		"fill",
-		points
-	)
+	if self.closed then
+		love.graphics.setColor(self.background(time))
+		love.graphics.polygon(
+			"fill",
+			points
+		)
+	end
 
 	local strokeWidth = self.strokeWidth(time)
 	if strokeWidth > 0 then
 		love.graphics.setColor(self.strokeColor(time))
 		love.graphics.setLineWidth(strokeWidth)
-		love.graphics.polygon(
-			"line",
-			points
-		)
+		love.graphics.line(points)
 	end
 end
 
