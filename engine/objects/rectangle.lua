@@ -11,6 +11,7 @@ local rectangle = {
 	strokeColor = function(time) return colors.red end,
 	strokeWidth = function(time) return 1 end,
 
+	origin = "",
 	rotation = function(time) return 0 end,
 
 	__type = "rectangle",
@@ -19,7 +20,9 @@ rectangle.__index = rectangle
 
 function rectangle:draw(time)
 	local x = self.x(time)
+	local xOffset = 0
 	local y = self.y(time)
+	local yOffset = 0
 	local width = self.width(time)
 	local height = self.height(time)
 	local rotation = self.rotation(time)
@@ -27,11 +30,16 @@ function rectangle:draw(time)
 	love.graphics.translate(x,y)
 	love.graphics.rotate(rotation)
 
+	if self.origin == "center" then
+		xOffset = -width/2
+		yOffset = -height/2
+	end
+
 	love.graphics.setColor(self.background(time))
 	love.graphics.rectangle(
 		"fill",
-		-width/2,
-		-height/2,
+		xOffset,
+		yOffset,
 		width,
 		height
 	)
@@ -42,8 +50,8 @@ function rectangle:draw(time)
 		love.graphics.setLineWidth(strokeWidth)
 		love.graphics.rectangle(
 			"line",
-			-width/2,
-			-height/2,
+			xOffset,
+			yOffset,
 			width,
 			height
 		)

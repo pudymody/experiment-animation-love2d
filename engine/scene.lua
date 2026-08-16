@@ -63,6 +63,7 @@ local scene = {
 			strokeWidth = 1,
 			strokeColor = colors.yin_dark,
 			background = colors.white,
+			origin = "center",
 		},
 	},
 }
