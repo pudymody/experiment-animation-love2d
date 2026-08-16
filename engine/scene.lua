@@ -7,6 +7,8 @@ local line = require("objects.line")
 local circle = require("objects.circle")
 local arc = require("objects.arc")
 local ellipse = require("objects.ellipse")
+local polygon = require("objects.polygon")
+
 local timeline = require("timeline")
 
 local scene = {
@@ -59,6 +61,13 @@ local scene = {
 			y = 0,
 			width = 100,
 			height = 50,
+			rotation = 0,
+			strokeWidth = 1,
+			strokeColor = colors.yin_dark,
+			background = colors.white,
+			origin = "",
+		},
+		polygon = {
 			rotation = 0,
 			strokeWidth = 1,
 			strokeColor = colors.yin_dark,
@@ -182,6 +191,17 @@ function scene:rectangle(o)
 	self:add(r)
 	return r
 end
+
+function scene:polygon(o)
+	std.mergeTable(o, self.defaults.polygon)
+	self:timelineProps(o)
+
+	local p = polygon(o)
+	self:add(p)
+	return p
+end
+
+
 
 function scene:frameStep()
 	return 1000 / self.fps
