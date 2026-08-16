@@ -146,6 +146,7 @@ return {
 
 	white = new {255,255,255,255},
 	black = new {0,0,0,255},
+	transparent = new {0,0,0,0},
 
 	new = new,
 }
