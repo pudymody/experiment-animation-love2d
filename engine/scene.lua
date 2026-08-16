@@ -200,6 +200,10 @@ function scene:rectangle(o)
 	return r
 end
 
+function scene:frameStep()
+	return 1000 / self.fps
+end
+
 local function newContext()
 	return {
 		currentTime = 0,

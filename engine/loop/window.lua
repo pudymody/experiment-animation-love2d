@@ -54,8 +54,10 @@ return function(loader)
 
 	local playback = newPlayback()
 	playback:setDuration(loader.scene:duration())
+	playback:setFrameStep(loader.scene:frameStep())
 	events:on("loader.update", function(scene)
 		playback:setDuration(scene:duration())
+		playback:setFrameStep(scene:frameStep())
 	end)
 
 	local renderer = newWindowRenderer(playback)

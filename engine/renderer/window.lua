@@ -280,6 +280,14 @@ return function(playback)
 			if key == "space" then
 				self.playback:toggle()
 			end
+
+			if key == "," then
+				self.playback:prevFrame()
+			end
+
+			if key == "." then
+				self.playback:nextFrame()
+			end
 		end,
 
 		mousepressed = function(self,x, y, button, istouch, presses )

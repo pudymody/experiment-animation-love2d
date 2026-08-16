@@ -4,10 +4,15 @@ return function()
 
 		position = 0,
 		positionSeekStep = 1000,
+		positionFrameStep = 0,
 		duration = 0,
 
 		setDuration = function(self, d)
 			self.duration = d
+		end,
+
+		setFrameStep = function(self,d)
+			self.positionFrameStep = d
 		end,
 
 		play = function(self)
@@ -35,8 +40,16 @@ return function()
 			self:seekBy(self.positionSeekStep)
 		end,
 
+		nextFrame = function(self)
+			self:seekBy(self.positionFrameStep)
+		end,
+
 		backward = function(self)
 			self:seekBy(-self.positionSeekStep)
+		end,
+
+		prevFrame = function(self)
+			self:seekBy(-self.positionFrameStep)
 		end,
 
 		stop = function(self)
