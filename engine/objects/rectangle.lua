@@ -27,7 +27,7 @@ function rectangle:draw(time)
 	love.graphics.translate(x,y)
 	love.graphics.rotate(rotation)
 
-	love.graphics.setColor(self.background)
+	love.graphics.setColor(self.background(time))
 	love.graphics.rectangle(
 		"fill",
 		-width/2,
@@ -36,7 +36,7 @@ function rectangle:draw(time)
 		height
 	)
 
-	love.graphics.setColor(self.strokeColor)
+	love.graphics.setColor(self.strokeColor(time))
 	love.graphics.setLineWidth(self.strokeWidth(time))
 	love.graphics.rectangle(
 		"line",

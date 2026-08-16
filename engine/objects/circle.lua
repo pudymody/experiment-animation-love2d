@@ -19,7 +19,7 @@ function circle:draw(time)
 	local y = self.y(time)
 	local radius = self.radius(time)
 
-	love.graphics.setColor(self.background)
+	love.graphics.setColor(self.background(time))
 	love.graphics.circle(
 		"fill",
 		x,
@@ -27,7 +27,7 @@ function circle:draw(time)
 		radius
 	)
 
-	love.graphics.setColor(self.strokeColor)
+	love.graphics.setColor(self.strokeColor(time))
 	love.graphics.setLineWidth(self.strokeWidth(time))
 	love.graphics.circle(
 		"line",

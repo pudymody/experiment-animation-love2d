@@ -25,7 +25,7 @@ function arc:draw(time)
 	local startAngle = self.startAngle(time)
 	local endAngle = self.endAngle(time)
 
-	love.graphics.setColor(self.background)
+	love.graphics.setColor(self.background(time))
 	love.graphics.arc(
 		"fill",
 		self.arcType,
@@ -36,7 +36,7 @@ function arc:draw(time)
 		endAngle
 	)
 
-	love.graphics.setColor(self.strokeColor)
+	love.graphics.setColor(self.strokeColor(time))
 	love.graphics.setLineWidth(self.strokeWidth(time))
 	love.graphics.arc(
 		"line",
