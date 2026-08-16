@@ -36,15 +36,18 @@ function ellipse:draw(time)
 		radiusY	
 	)
 
-	love.graphics.setColor(self.strokeColor(time))
-	love.graphics.setLineWidth(self.strokeWidth(time))
-	love.graphics.ellipse(
-		"line",
-		0,
-		0,
-		radiusX,
-		radiusY
-	)
+	local strokeWidth = self.strokeWidth(time)
+	if strokeWidth > 0 then
+		love.graphics.setColor(self.strokeColor(time))
+		love.graphics.setLineWidth(strokeWidth)
+		love.graphics.ellipse(
+			"line",
+			0,
+			0,
+			radiusX,
+			radiusY
+		)
+	end
 end
 
 return function(opts)

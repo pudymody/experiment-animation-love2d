@@ -36,15 +36,18 @@ function rectangle:draw(time)
 		height
 	)
 
-	love.graphics.setColor(self.strokeColor(time))
-	love.graphics.setLineWidth(self.strokeWidth(time))
-	love.graphics.rectangle(
-		"line",
-		-width/2,
-		-height/2,
-		width,
-		height
-	)
+	local strokeWidth = self.strokeWidth(time)
+	if strokeWidth > 0 then
+		love.graphics.setColor(self.strokeColor(time))
+		love.graphics.setLineWidth(strokeWidth)
+		love.graphics.rectangle(
+			"line",
+			-width/2,
+			-height/2,
+			width,
+			height
+		)
+	end
 end
 
 return function(opts)

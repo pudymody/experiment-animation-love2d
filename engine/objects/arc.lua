@@ -36,17 +36,20 @@ function arc:draw(time)
 		endAngle
 	)
 
-	love.graphics.setColor(self.strokeColor(time))
-	love.graphics.setLineWidth(self.strokeWidth(time))
-	love.graphics.arc(
-		"line",
-		self.arcType,
-		x,
-		y,
-		radius,
-		startAngle,
-		endAngle
-	)
+	local strokeWidth = self.strokeWidth(time)
+	if strokeWidth > 0 then
+		love.graphics.setColor(self.strokeColor(time))
+		love.graphics.setLineWidth(strokeWidth)
+		love.graphics.arc(
+			"line",
+			self.arcType,
+			x,
+			y,
+			radius,
+			startAngle,
+			endAngle
+		)
+	end
 end
 
 return function(opts)

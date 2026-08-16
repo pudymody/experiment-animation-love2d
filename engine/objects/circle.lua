@@ -27,14 +27,17 @@ function circle:draw(time)
 		radius
 	)
 
-	love.graphics.setColor(self.strokeColor(time))
-	love.graphics.setLineWidth(self.strokeWidth(time))
-	love.graphics.circle(
-		"line",
-		x,
-		y,
-		radius	
-	)
+	local strokeWidth = self.strokeWidth(time)
+	if strokeWidth > 0 then
+		love.graphics.setColor(self.strokeColor(time))
+		love.graphics.setLineWidth(strokeWidth)
+		love.graphics.circle(
+			"line",
+			x,
+			y,
+			radius	
+		)
+	end
 end
 
 return function(opts)
