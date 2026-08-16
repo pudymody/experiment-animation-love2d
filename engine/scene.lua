@@ -1,3 +1,4 @@
+local std = require("std")
 local colors = require("colors")
 
 local rectangle = require("objects.rectangle")
@@ -7,26 +8,6 @@ local circle = require("objects.circle")
 local arc = require("objects.arc")
 local ellipse = require("objects.ellipse")
 local timeline = require("timeline")
-
-local function mergeTable(t1,t2)
-	for k,v in pairs(t2) do
-		if t1[k] == nil then
-			t1[k] = v
-		end
-	end
-end
-
-local function typeof(o)
-	if type(o) != 'table' then
-		return type(o)
-	end
-
-	if o.__type != nil then
-		return o.__type
-	end
-
-	return "table"
-end
 
 local scene = {
 	width = 1920,
@@ -120,7 +101,8 @@ end
 
 function scene:timelineProps(o)
 	for k,v in pairs(o) do
-		if typeof(o[k]) == "number" then
+		local objType = std.typeof(o[k])
+		if objType == "number" || objType == "color" then
 			o[k] = self:timeline(o[k])
 		end
 	end
@@ -131,7 +113,7 @@ function scene:add(o)
 end
 
 function scene:circle(o)
-	mergeTable(o, self.defaults.circle)
+	std.mergeTable(o, self.defaults.circle)
 	self:timelineProps(o)
 
 	local c = circle(o)
@@ -140,7 +122,7 @@ function scene:circle(o)
 end
 
 function scene:arc(o)
-	mergeTable(o, self.defaults.arc)
+	std.mergeTable(o, self.defaults.arc)
 	self:timelineProps(o)
 
 	local a = arc(o)
@@ -149,7 +131,7 @@ function scene:arc(o)
 end
 
 function scene:ellipse(o)
-	mergeTable(o, self.defaults.ellipse)
+	std.mergeTable(o, self.defaults.ellipse)
 	self:timelineProps(o)
 
 	local e = ellipse(o)
@@ -158,30 +140,30 @@ function scene:ellipse(o)
 end
 
 function scene:point(o)
-	mergeTable(o, self.defaults.point)
+	std.mergeTable(o, self.defaults.point)
 	self:timelineProps(o)
 
 	return point(o) 
 end
 
 function scene:line(o)
-	mergeTable(o, self.defaults.line)
+	std.mergeTable(o, self.defaults.line)
 	self:timelineProps(o)
 
 	-- TODO: Should it be a deep constructor?
-	if typeof(o.startPoint.x) == "number" then
+	if std.typeof(o.startPoint.x) == "number" then
 		o.startPoint.x = timeline(o.startPoint.x)
 		o.startPoint.x.context = self.context
 	end
-	if typeof(o.startPoint.y) == "number" then
+	if std.typeof(o.startPoint.y) == "number" then
 		o.startPoint.y = timeline(o.startPoint.y)
 		o.startPoint.y.context = self.context
 	end
-	if typeof(o.endPoint.x) == "number" then
+	if std.typeof(o.endPoint.x) == "number" then
 		o.endPoint.x = timeline(o.endPoint.x)
 		o.endPoint.x.context = self.context
 	end
-	if typeof(o.endPoint.y) == "number" then
+	if std.typeof(o.endPoint.y) == "number" then
 		o.endPoint.y = timeline(o.endPoint.y)
 		o.endPoint.y.context = self.context
 	end
@@ -192,7 +174,7 @@ function scene:line(o)
 end
 
 function scene:rectangle(o)
-	mergeTable(o, self.defaults.rectangle)
+	std.mergeTable(o, self.defaults.rectangle)
 	self:timelineProps(o)
 
 	local r = rectangle(o)

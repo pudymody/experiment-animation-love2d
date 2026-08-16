@@ -1,21 +1,5 @@
+local std = require("std")
 local colors = require("colors")
-
--- https://forums.mudlet.org/viewtopic.php?t=3258
-function parseTime(milliseconds)
-  local totalseconds = math.floor(milliseconds / 1000)
-  milliseconds = milliseconds % 1000
-  local seconds = totalseconds % 60
-  local minutes = math.floor(totalseconds / 60)
-  local hours = math.floor(minutes / 60)
-  minutes = minutes % 60
-
-	return { milliseconds = milliseconds, seconds = seconds, minutes = minutes, hours = hours }
-end
-
-function toggleFullscreen()
-	_, _, flags = love.window.getMode()
-	love.window.setFullscreen(not flags.fullscreen)
-end
 
 local osc = {
 	background = colors.yin_dark,
@@ -69,8 +53,8 @@ local osc = {
 	end,
 
 	positionFormat = function(self)
-		local current = parseTime(self.playback.position)
-		local total = parseTime(self.playback.duration)
+		local current = std.parseMilliseconds(self.playback.position)
+		local total = std.parseMilliseconds(self.playback.duration)
 
 		if total.minutes == 0 then
 			return string.format(
@@ -204,7 +188,7 @@ local osc = {
 		end
 
 		if x >= self.seekbar_offset + self.seekbar_width + self.padding * 2 then
-			toggleFullscreen()
+			std.toggleFullscreen()
 		end
 	end,
 
@@ -262,7 +246,7 @@ return function(playback)
 			end
 
 			if key == "f" then
-				toggleFullscreen()
+				std.toggleFullscreen()
 			end
 
 			if key == "right" then
