@@ -1,6 +1,80 @@
 local std = require("std")
 local colors = require("colors")
 
+local menu = {
+	background = colors.yin_dark,
+	foreground = colors.white,
+	padding = 5,
+	currentOffset = 0,
+
+	x = 0,
+	y = 0,
+	width = 0,
+	height = 30,
+
+	exportX = 0,
+
+	loader = nil,
+
+	file = function(self)
+		love.graphics.setColor(self.foreground)
+
+		local font       = love.graphics.getFont()
+		local text = self.loader.filePath
+		local textWidth  = font:getWidth(text)
+		local textHeight = font:getHeight()
+		love.graphics.print(
+			text,
+			self.currentOffset + self.padding,
+			self.y + self.padding + (self.height - self.padding * 2)/2 - textHeight/2
+		)
+
+		self.currentOffset = self.currentOffset + self.padding * 2 + textWidth
+	end,
+
+	export = function(self)
+		love.graphics.setColor(self.foreground)
+
+		local font       = love.graphics.getFont()
+		local text = "Export"
+		local textWidth  = font:getWidth(text)
+		local textHeight = font:getHeight()
+		self.exportX = self.x + self.width - self.padding - textWidth
+		love.graphics.print(
+			text,
+			self.exportX,
+			self.y + self.padding + (self.height - self.padding * 2)/2 - textHeight/2
+		)
+
+		self.currentOffset = self.currentOffset + self.padding * 2 + textWidth
+	end,
+
+	draw = function(self)
+		self.currentOffset = self.x
+
+		-- osc background
+		love.graphics.setColor(self.background)
+		love.graphics.rectangle(
+			"fill",
+			self.x,
+			self.y,
+			self.width,
+			self.height
+		)
+
+		self:file()
+		self:export()
+	end,
+
+	mousepressed = function(self,x, y, button, istouch, presses )
+		if x < self.exportX or x > self.x + self.width - self.padding then
+			return
+		end
+
+		print("export")
+	end,
+}
+
 local osc = {
 	background = colors.yin_dark,
 	padding = 5,
@@ -212,30 +286,35 @@ local osc = {
 	end,
 }
 
-return function(playback)
+return function(playback, loader)
 	osc.playback = playback
+	menu.loader = loader 
 
 	return {
 		osc = osc,
+		menu = menu,
 		playback = playback,
 		draw = function(self, canvas)
 			local windowWidth, windowHeight = love.window.getMode()
 
 			self.osc.y = windowHeight - self.osc.height
 			self.osc.width = windowWidth
+			self.menu.width = windowWidth
 			windowHeight = windowHeight - self.osc.height
+			windowHeight = windowHeight - self.menu.height
 
 			local sceneWidth = canvas:getWidth() 
 			local sceneHeight = canvas:getHeight()
 			local scale = math.min( windowWidth / sceneWidth, windowHeight / sceneHeight)
 			local offsetX = (windowWidth - (sceneWidth * scale)) / 2
-			local offsetY = (windowHeight - (sceneHeight * scale)) / 2
+			local offsetY = (windowHeight - (sceneHeight * scale)) / 2 + self.menu.height
 
 			love.graphics.reset()
 			love.graphics.clear(colors.black)
 			love.graphics.draw(canvas, offsetX, offsetY, 0, scale, scale)
 
 			self.osc:draw()
+			self.menu:draw()
 
 			love.graphics.present()
 		end,
@@ -275,6 +354,11 @@ return function(playback)
 		end,
 
 		mousepressed = function(self,x, y, button, istouch, presses )
+			if y < self.menu.height then
+				self.menu:mousepressed(x,y,button,istouch,presses)
+				return
+			end
+
 			if y < self.osc.y then
 				self.playback:toggle()
 				return

@@ -61,7 +61,7 @@ return function(loader)
 		playback:setFrameStep(scene:frameStep())
 	end)
 
-	local renderer = newWindowRenderer(playback)
+	local renderer = newWindowRenderer(playback, loader)
 	events:on("love.keypressed", function(e)
 		renderer:keypressed(e.key,e.scancode,e.isrepeat)
 	end)
