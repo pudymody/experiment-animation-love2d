@@ -69,11 +69,19 @@ local menu = {
 	end,
 
 	mousepressed = function(self,x, y, button, istouch, presses )
+		if y < self.y or y > self.y + self.height then
+			return false
+		end
+		if x < self.x or x > self.x + self.width then
+			return false
+		end
+
 		if x < self.exportX or x > self.x + self.width - self.padding then
-			return
+			return true 
 		end
 
 		self.events:dispatch("export")
+		return true
 	end,
 }
 
@@ -252,6 +260,13 @@ local osc = {
 
 	-- this is super fragile as it depends on the order we draw them
 	mousepressed = function(self,x, y, button, istouch, presses )
+		if y < self.y or y > self.y + self.height then
+			return false
+		end
+		if x < self.x or x > self.x + self.width then
+			return false
+		end
+
 		if x <= self.height then
 			self.playback:toggle()
 		end
@@ -266,6 +281,8 @@ local osc = {
 		if x >= self.seekbar_offset + self.seekbar_width + self.padding * 2 then
 			std.toggleFullscreen()
 		end
+
+		return true
 	end,
 
 	mousereleased = function(self,x, y, button, istouch, presses )
@@ -357,17 +374,15 @@ return function(playback, loader, events)
 		end,
 
 		mousepressed = function(self,x, y, button, istouch, presses )
-			if y < self.menu.height then
-				self.menu:mousepressed(x,y,button,istouch,presses)
+			if self.menu:mousepressed(x,y,button,istouch,presses) then
 				return
 			end
 
-			if y < self.osc.y then
-				self.playback:toggle()
+			if self.osc:mousepressed(x,y,button,istouch,presses) then
 				return
 			end
 
-			self.osc:mousepressed(x,y,button,istouch,presses)
+			self.playback:toggle()
 		end,
 
 		mousereleased = function(self,x, y, button, istouch, presses )
