@@ -46,6 +46,7 @@ function love.mousefocus( f )
 end
 
 return function(loader)
+	love.keyboard.setKeyRepeat(true)
 	local canvas = love.graphics.newCanvas(loader.scene.width, loader.scene.height)
 	events:on("loader.update", function(scene)
 		canvas:release()
