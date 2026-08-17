@@ -1,7 +1,6 @@
 local newEventBus = require("events")
 local newLoader = require("loader")
 local loopWindow = require("loop.window")
-local loopExportPNG = require("loop.export_png")
 
 events = newEventBus()
 
@@ -16,5 +15,6 @@ function love.run()
 
 	local loader = newLoader(file, events)
 
+	-- TODO: Doesnt make sense anymore to have the loop outside
 	return loopWindow(loader)
 end

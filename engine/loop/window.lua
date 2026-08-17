@@ -1,5 +1,5 @@
-local newPlayback = require("playback")
-local newWindowRenderer = require("renderer.window")
+local statePlay = require("states.play")
+local stateExport = require("states.export")
 
 function love.keypressed(key, scancode, isrepeat)
 	events:dispatch("love.keypressed", {
@@ -51,41 +51,23 @@ function love.filedropped( f )
 	})
 end
 
+local states = {}
+local currentState = "play"
+
 return function(loader)
+	states.play = statePlay(loader, events)
+	states.export = stateExport(loader, events)
+
 	love.keyboard.setKeyRepeat(true)
-	local canvas = love.graphics.newCanvas(loader.scene.width, loader.scene.height)
-	events:on("loader.update", function(scene)
-		canvas:release()
-		canvas = love.graphics.newCanvas(scene.width, scene.height)
-	end)
 
-	local playback = newPlayback()
-	playback:setDuration(loader.scene:duration())
-	playback:setFrameStep(loader.scene:frameStep())
-	events:on("loader.update", function(scene)
-		playback:setDuration(scene:duration())
-		playback:setFrameStep(scene:frameStep())
-	end)
-
-	local renderer = newWindowRenderer(playback, loader)
-	events:on("love.keypressed", function(e)
-		renderer:keypressed(e.key,e.scancode,e.isrepeat)
-	end)
-	events:on("love.mousepressed", function(e)
-		renderer:mousepressed(e.x,e.y,e.button,e.istouch,e.presses)
-	end)
-	events:on("love.mousemoved", function(e)
-		renderer:mousemoved(e.x,e.y,e.dx, e.dy,e.istouch)
-	end)
-	events:on("love.mousefocus", function(e)
-		renderer:mousefocus(e.f)
-	end)
-	events:on("love.mousereleased", function(e)
-		renderer:mousereleased(e.x,e.y,e.button,e.istouch,e.presses)
-	end)
 	events:on("love.filedropped", function(e)
 		loader.filePath = e.f:getFilename()
 		loader.fileLastCheck = 0
+	end)
+	-- TODO: Abstract a little more the state change and events interaction
+	events:on("export", function(e)
+		states.export:enter()
+		currentState = "export"
 	end)
 
 	-- We don't want the first frame's dt to include time taken by love.load.
@@ -106,21 +88,9 @@ return function(loader)
 			end
 		end
 
-		loader:update()
-
-		-- Update dt, as we'll be passing it to update
-		if love.timer and playback.isPlaying then
-			playback:seekBy(love.timer.step() * 1000)
-		end
-
-		if love.graphics and love.graphics.isActive() then
-			love.graphics.setCanvas(canvas)
-			love.graphics.origin()
-			love.graphics.clear(loader.scene.background)
-			loader.scene:draw(playback.position)
-
-			renderer:draw(canvas)
-		end
+		local state = states[currentState]
+		state:update()
+		state:draw()
 
 		if love.timer then love.timer.sleep(0.001) end
 	end

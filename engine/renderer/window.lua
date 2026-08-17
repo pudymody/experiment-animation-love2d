@@ -1,3 +1,4 @@
+-- TODO: Abstract all of this ui into nodes/layouts/buttons
 local std = require("std")
 local colors = require("colors")
 
@@ -15,6 +16,7 @@ local menu = {
 	exportX = 0,
 
 	loader = nil,
+	events = nil,
 
 	file = function(self)
 		love.graphics.setColor(self.foreground)
@@ -71,7 +73,7 @@ local menu = {
 			return
 		end
 
-		print("export")
+		self.events:dispatch("export")
 	end,
 }
 
@@ -286,9 +288,10 @@ local osc = {
 	end,
 }
 
-return function(playback, loader)
+return function(playback, loader, events)
 	osc.playback = playback
 	menu.loader = loader 
+	menu.events = events 
 
 	return {
 		osc = osc,
