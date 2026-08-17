@@ -1,10 +1,6 @@
 local nativefs = require("nativefs")
 
 return function(file, events)
-	if file == nil then
-		return nil, "You have to provide a valid scene file to run"
-	end
-
 	local loader = {
 		filePath = file,
 		fileLastModified = 0,

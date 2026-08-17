@@ -9,6 +9,7 @@ return function()
 
 		setDuration = function(self, d)
 			self.duration = d
+			self:seekBy(0)
 		end,
 
 		setFrameStep = function(self,d)

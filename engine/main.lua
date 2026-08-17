@@ -8,25 +8,13 @@ events = newEventBus()
 function love.run()
 	local args = love.arg.parseGameArguments(arg)
 
-	if #args < 2 then
-		print("Available commands:")
-		print("play file.lua")
-		print("export-png file.lua")
-		return
+	local file = args[1]
+	if file == nil or file == "" then
+		local srcPath = love.filesystem.getSourceBaseDirectory()
+		file = srcPath.."/default.lua"
 	end
 
-	local file = args[2]
-	local loader, err = newLoader(file, events)
-	if err ~= nil then
-		print(err)
-		return
-	end
+	local loader = newLoader(file, events)
 
-	if args[1] == "play" then
-		return loopWindow(loader)
-	end
-
-	if args[1] == "export-png" then
-		return loopExportPNG(loader)
-	end
+	return loopWindow(loader)
 end

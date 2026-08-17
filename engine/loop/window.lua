@@ -45,6 +45,12 @@ function love.mousefocus( f )
 	})
 end
 
+function love.filedropped( f )
+	events:dispatch("love.filedropped", {
+		f = f,
+	})
+end
+
 return function(loader)
 	love.keyboard.setKeyRepeat(true)
 	local canvas = love.graphics.newCanvas(loader.scene.width, loader.scene.height)
@@ -76,6 +82,10 @@ return function(loader)
 	end)
 	events:on("love.mousereleased", function(e)
 		renderer:mousereleased(e.x,e.y,e.button,e.istouch,e.presses)
+	end)
+	events:on("love.filedropped", function(e)
+		loader.filePath = e.f:getFilename()
+		loader.fileLastCheck = 0
 	end)
 
 	-- We don't want the first frame's dt to include time taken by love.load.
