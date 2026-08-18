@@ -67,22 +67,24 @@ function love.run()
 		file = srcPath.."/default.lua"
 	end
 
-	local loader = newLoader(file, events)
+	local loader = newLoader(file)
 
 	local states = {}
 	local currentState = "play"
 
-	states.play = statePlay(loader, events)
-	states.export = stateExport(loader, events)
+	states.play = statePlay{ loader = loader, events = events }
+	states.export = stateExport(loader)
 
 	events:on("love.filedropped", function(e)
 		loader.filePath = e.f:getFilename()
 		loader.fileLastCheck = 0
 	end)
 	-- TODO: Abstract a little more the state change and events interaction
-	events:on("export", function(e)
-		states.export:enter()
-		currentState = "export"
+	events:on("state.change", function(e)
+		currentState = e 
+		if states[currentState].enter != nil then
+			states[currentState]:enter()
+		end
 	end)
 
 	-- We don't want the first frame's dt to include time taken by love.load.

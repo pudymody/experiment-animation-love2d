@@ -1,13 +1,14 @@
 local nativefs = require("nativefs")
+local newEventBus = require("events")
 
-return function(file, events)
+return function(file)
 	local loader = {
 		filePath = file,
 		fileLastModified = 0,
 		fileLastCheck = 0,
 		fileCheckIntervalMS = 250,
 		scene = nil,
-		events = events,
+		events = newEventBus(),
 
 		update = function(self)
 			-- hotreload file based on https://github.com/kjarvi/monocle/blob/master/monocle.lua
@@ -21,7 +22,7 @@ return function(file, events)
 			if fileInfo ~= nil and self.fileLastModified ~= fileInfo.modtime then
 				self.fileLastModified = fileInfo.modtime
 				self.scene = loadfile(self.filePath)()
-				events:dispatch("loader.update", self.scene)
+				self.events:dispatch("loader.update", self.scene)
 				return true
 			end
 
