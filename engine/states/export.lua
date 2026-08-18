@@ -1,4 +1,5 @@
 local nativefs = require("nativefs")
+local colors = require("colors")
 
 local state = {
 	loader = nil,
@@ -24,7 +25,7 @@ local state = {
 	end,
 
 	update = function(self)
-		if self.currentFrame > self.totalFrames then
+		if self.currentFrame >= self.totalFrames then
 			return
 		end
 
@@ -45,14 +46,35 @@ local state = {
 	end,
 
 	draw = function(self)
+		local windowWidth, windowHeight = love.window.getMode()
+
+		local radius = math.min(windowWidth/2, windowHeight/2)
+		local outerRadius = radius * 0.8
+		local innerRadius = radius * 0.7
+
 		love.graphics.reset()
-		love.graphics.clear(0,0,0,1)
-		love.graphics.print("Duration: "..self.loader.scene:duration().."ms", 10, 10)
-		love.graphics.print("FPS: "..self.loader.scene.fps, 10, 30)
-		love.graphics.print("Step: "..self.loader.scene:frameStep(), 10, 50)
-		love.graphics.print("File format: "..self.fileFormat, 10, 70)
-		love.graphics.print("Total frames: "..self.totalFrames, 10, 90)
-		love.graphics.print("Current frame: "..self.currentFrame, 10, 110)
+		love.graphics.clear(1,1,1,1)
+
+		love.graphics.setColor(colors.green)
+
+		local percentage = self.currentFrame / self.totalFrames
+		local percentageText = math.ceil(percentage*100).."%"
+
+		love.graphics.arc( "fill", windowWidth / 2, windowHeight / 2, outerRadius, 0, math.pi * 2 * percentage, segments )
+
+		love.graphics.setColor(colors.white)
+		love.graphics.arc( "fill", windowWidth / 2, windowHeight / 2, innerRadius, 0, math.pi * 2 * percentage, segments )
+
+		love.graphics.setColor(colors.green)
+		local font       = love.graphics.getFont()
+		local textWidth  = font:getWidth(percentageText)
+		local textHeight = font:getHeight()
+		love.graphics.print(percentageText, windowWidth / 2 - textWidth / 2, windowHeight / 2 - textHeight / 2)
+
+
+		textWidth  = font:getWidth(self.fileFormat)
+		love.graphics.print(self.fileFormat, windowWidth / 2 - textWidth / 2, windowHeight / 2 + textHeight * 2)
+
 		love.graphics.present()
 	end,
 }
